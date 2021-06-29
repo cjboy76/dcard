@@ -1,18 +1,35 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="home container mx-auto grid grid-cols-5 gap-4 mt-4">
+    <app-mainsidebar />
+    <app-maincontent />
+    <app-mainprofile />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import AppMainsidebar from "@/components/Mainsidebar.vue";
+import AppMaincontent from "@/components/Maincontent.vue";
+import AppMainprofile from "@/components/Mainprofile.vue";
 
 export default {
   name: "Home",
   components: {
-    HelloWorld,
+    AppMainsidebar,
+    AppMaincontent,
+    AppMainprofile,
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.tab-1::after,
+.tab-2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background-color: black;
+}
+</style>
