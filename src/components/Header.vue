@@ -50,6 +50,43 @@
     </div>
   </header>
   <div class="w-full" style="height: 70px"></div>
+  <!-- hamburger-list -->
+  <div class="w-full bg-gray-100 hidden">
+    <div class="w-4/5 mx-auto text-center">
+      <form class="flex justify-center items-center py-4">
+        <input
+          type="text"
+          class="
+            bg-gray-100
+            text-gray-600
+            focus:outline-none
+            ml-1
+            border-b-2 border-gray-300
+          "
+        />
+        <button class="rounded-sm p-1">
+          <span class="material-icons"> search </span>
+        </button>
+      </form>
+      <div class="sm:py-4 sm:flex sm:justify-around sm:items-center">
+        <div class="cursor-pointer py-4 sm:py-0">
+          <span>所有看板</span>
+        </div>
+        <div class="cursor-pointer py-4 sm:py-0">
+          <span>即時熱門看板</span>
+        </div>
+        <div class="cursor-pointer py-4 sm:py-0">
+          <span>個人設定</span>
+        </div>
+        <div class="cursor-pointer py-4 sm:py-0">
+          <span>發表文章</span>
+        </div>
+        <div class="cursor-pointer py-4 sm:py-0">
+          <span>喜愛文章</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

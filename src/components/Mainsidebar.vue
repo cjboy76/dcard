@@ -65,7 +65,7 @@
         >
           <span class="material-icons"> account_circle </span>
 
-          <div class="ml-2">個人檔案</div>
+          <div class="ml-2">個人設定</div>
         </div>
       </a>
       <a href="" class="w-full">
