@@ -1,5 +1,6 @@
 <template>
-  <div class="home container mx-auto grid grid-cols-5 gap-4 mt-4">
+  <!-- home page -->
+  <div class="home container mx-auto lg:grid lg:grid-cols-5 lg:gap-4 lg:mt-4">
     <app-mainsidebar />
     <app-maincontent />
     <app-mainprofile />

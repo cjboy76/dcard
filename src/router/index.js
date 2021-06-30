@@ -8,13 +8,52 @@ const routes = [
     component: Home,
   },
   {
-    path: "/about",
-    name: "About",
+    path: "/allboard",
+    name: "Allboard",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import(/* webpackChunkName: "allboard" */ "../views/Allboard.vue"),
+  },
+  {
+    path: "/rankboard",
+    name: "Rankboard",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "rankboard" */ "../views/Rankboard.vue"),
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
+  },
+  {
+    path: "/articles",
+    name: "Articles",
+    component: () =>
+      import(/* webpackChunkName: "articles" */ "../views/Articles.vue"),
+  },
+  {
+    path: "/favs",
+    name: "Favs",
+    component: () =>
+      import(/* webpackChunkName: "favs" */ "../views/Favcomment.vue"),
+  },
+  {
+    // path: "*",
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    meta: {
+      requiresAuth: false,
+    },
+    redirect: { name: "Home" },
   },
 ];
 

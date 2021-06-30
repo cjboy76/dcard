@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative hidden lg:block">
     <div
       class="
         navlink
@@ -45,24 +45,6 @@
           <span class="material-icons"> local_fire_department </span>
 
           <div class="ml-2">即時熱門看板</div>
-        </div>
-      </a>
-      <a href="" class="w-full">
-        <div
-          class="
-            flex
-            jusity-center
-            items-center
-            h-10
-            pl-4
-            pr-4
-            py-6
-            hover:bg-green-800
-          "
-        >
-          <span class="material-icons"> sports_esports </span>
-
-          <div class="ml-2">遊戲專區</div>
         </div>
       </a>
       <div class="w-full flex justify-center items-center pt-4">
