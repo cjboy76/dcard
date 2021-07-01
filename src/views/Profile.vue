@@ -19,11 +19,19 @@
       <!-- information -->
       <div class="w-10/12 mx-auto">
         <div class="grid justify-center items-center pt-4">
-          <img
-            src="https://picsum.photos/100/100?random=1"
-            alt=""
-            class="rounded-full"
-          />
+          <div
+            class="
+              rounded-full
+              border-2 border-gray-500
+              overflow-hidden
+              flex
+              justify-center
+              items-center
+            "
+          >
+            <img :src="user.userImage" v-if="user.userImage" />
+            <img src="@/assets/user.svg" v-else />
+          </div>
           <button
             class="
               border border-gray-400
@@ -33,13 +41,13 @@
               hover:text-gray-100 hover:bg-green-700 hover:border-green-700
             "
           >
-            更改
+            更改照片
           </button>
         </div>
         <div class="border-b border-gray-400 grid grid-cols-3">
           <div class="flex col-span-2 w-5/6 mx-auto py-6">
             <label class="mr-2 text-gray-400">姓名</label>
-            <span>你的名字</span>
+            <span>{{ user.name }}</span>
           </div>
           <div class="col-span-1 grid justify-center">
             <button
@@ -58,7 +66,7 @@
         <div class="border-b border-gray-400 grid grid-cols-3">
           <div class="flex col-span-2 w-5/6 mx-auto py-6">
             <label class="mr-2 text-gray-400">性別</label>
-            <span>男</span>
+            <span>{{ user.gender }}</span>
           </div>
           <div class="col-span-1 grid justify-center">
             <button
@@ -77,7 +85,7 @@
         <div class="border-b border-gray-400 grid grid-cols-3">
           <div class="flex col-span-2 w-5/6 mx-auto py-6">
             <label class="mr-2 text-gray-400">信箱</label>
-            <span>hello@gmail.com</span>
+            <span>{{ user.email }}</span>
           </div>
           <div class="col-span-1 grid justify-center">
             <button
@@ -96,7 +104,7 @@
         <div class="border-b border-gray-400 grid grid-cols-3">
           <div class="flex col-span-2 w-5/6 mx-auto py-6">
             <label class="mr-2 text-gray-400">出生日期</label>
-            <span>2021 / 06 / 01</span>
+            <span>{{ user.birth }}</span>
           </div>
           <div class="col-span-1 grid justify-center">
             <button
@@ -132,10 +140,26 @@
 </template>
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
+import { usersCollection, auth } from "@/includes/firebase";
+
 export default {
   name: "AppProfile",
   components: {
     AppMainsidebar,
+  },
+
+  data() {
+    return {
+      user: {},
+    };
+  },
+  async created() {
+    const userRef = await usersCollection.doc(auth.currentUser.uid).get();
+    this.user = {
+      ...userRef.data(),
+      gender: "未設定",
+      birth: "未設定",
+    };
   },
 };
 </script>

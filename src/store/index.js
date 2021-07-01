@@ -37,11 +37,11 @@ export default createStore({
     async login({ commit }, payload) {
       await auth.signInWithEmailAndPassword(payload.email, payload.password);
       commit("toggleAuth");
-      console.log(auth.currentUser);
     },
     async logout({ commit }) {
       await auth.signOut();
       commit("toggleAuth");
+      window.location.reload();
     },
     // app.vue載入時呼叫
     init_login({ commit }) {

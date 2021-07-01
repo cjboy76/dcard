@@ -11,7 +11,7 @@
         top-24
       "
     >
-      <a href="" class="w-full">
+      <router-link :to="{ name: 'Allboard' }" class="w-full">
         <div
           class="
             flex
@@ -28,8 +28,8 @@
 
           <div class="ml-2">所有看板</div>
         </div>
-      </a>
-      <a href="" class="w-full">
+      </router-link>
+      <router-link :to="{ name: 'Rankboard' }" class="w-full">
         <div
           class="
             flex
@@ -46,11 +46,11 @@
 
           <div class="ml-2">即時熱門看板</div>
         </div>
-      </a>
+      </router-link>
       <div class="w-full flex justify-center items-center pt-4">
         <span class="text-gray-100 text-opacity-50">設定</span>
       </div>
-      <a href="" class="w-full">
+      <router-link :to="{ name: 'Profile' }" class="w-full">
         <div
           class="
             flex
@@ -62,13 +62,14 @@
             py-6
             hover:bg-green-800
           "
+          v-if="userLoggedIn"
         >
           <span class="material-icons"> account_circle </span>
 
           <div class="ml-2">個人設定</div>
         </div>
-      </a>
-      <a href="" class="w-full">
+      </router-link>
+      <router-link :to="{ name: 'Articles' }" class="w-full">
         <div
           class="
             flex
@@ -85,8 +86,8 @@
 
           <div class="ml-2">發表文章</div>
         </div>
-      </a>
-      <a href="" class="w-full">
+      </router-link>
+      <router-link :to="{ name: 'Favs' }" class="w-full">
         <div
           class="
             flex
@@ -103,14 +104,19 @@
 
           <div class="ml-2">喜愛文章</div>
         </div>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "AppMainSidebar",
+  computed: {
+    ...mapState(["userLoggedIn"]),
+  },
 };
 </script>
 

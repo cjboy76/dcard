@@ -3,13 +3,16 @@
     <div class="container mx-auto flex justify-center items-center">
       <nav class="flex justify-start items-center container w-4/5">
         <!-- logo -->
-        <img
-          src="@/assets/fish.svg"
-          alt="fish"
-          width="70"
-          height="50"
-          class="ml-4 sm:ml-1"
-        />
+        <router-link :to="{ name: 'Home' }">
+          <img
+            src="@/assets/fish.svg"
+            alt="fish"
+            width="70"
+            height="50"
+            class="ml-4 sm:ml-1"
+          />
+        </router-link>
+
         <!-- search-bar -->
         <div class="ml-4 w-5/6 hidden lg:block">
           <form class="flex justify-start items-center">
@@ -53,7 +56,7 @@
         @click="logout"
         v-else
       >
-        <span class="hidden lg:block">登出</span>
+        <span class="hidden font-bold lg:block">登出 </span>
       </div>
 
       <!-- hamburger button -->
@@ -92,22 +95,40 @@
             <span class="material-icons"> search </span>
           </button>
         </form>
-        <div class="sm:py-4 sm:flex sm:justify-around sm:items-center">
-          <div class="cursor-pointer py-4 sm:py-0">
+        <div
+          class="sm:py-4 sm:flex sm:justify-around sm:items-center"
+          @click="toggleBurger = !toggleBurger"
+        >
+          <router-link
+            :to="{ name: 'Allboard' }"
+            class="cursor-pointer py-4 sm:py-0"
+          >
             <span>所有看板</span>
-          </div>
-          <div class="cursor-pointer py-4 sm:py-0">
+          </router-link>
+          <router-link
+            class="cursor-pointer py-4 sm:py-0"
+            :to="{ name: 'Rankboard' }"
+          >
             <span>即時熱門看板</span>
-          </div>
-          <div class="cursor-pointer py-4 sm:py-0">
+          </router-link>
+          <router-link
+            class="cursor-pointer py-4 sm:py-0"
+            :to="{ name: 'Profile' }"
+          >
             <span>個人設定</span>
-          </div>
-          <div class="cursor-pointer py-4 sm:py-0">
+          </router-link>
+          <router-link
+            class="cursor-pointer py-4 sm:py-0"
+            :to="{ name: 'Articles' }"
+          >
             <span>發表文章</span>
-          </div>
-          <div class="cursor-pointer py-4 sm:py-0">
+          </router-link>
+          <router-link
+            class="cursor-pointer py-4 sm:py-0"
+            :to="{ name: 'Favs' }"
+          >
             <span>喜愛文章</span>
-          </div>
+          </router-link>
           <div
             class="cursor-pointer py-4 sm:py-0"
             v-if="!userLoggedIn"
@@ -152,7 +173,7 @@ export default {
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateY(-50%);
-  opacity: 0;
+  transform: translateY(-70%);
+  opacity: 0.5;
 }
 </style>
