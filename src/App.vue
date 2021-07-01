@@ -13,5 +13,9 @@ export default {
     AppHeader,
     Landing,
   },
+  created() {
+    console.log("fire!!");
+    this.$store.dispatch("init_login");
+  },
 };
 </script>

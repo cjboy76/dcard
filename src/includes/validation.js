@@ -39,10 +39,10 @@ export default {
           min: `＊長度太短囉`,
           max: `＊長度太長囉`,
           email: `＊必須為有效信箱`,
+          password_mismatch: "＊密碼不符",
           min_value: `The field ${context.field} is too low.`,
           max_value: `The field ${context.field} is too high.`,
           excluded: `You are not allowed to use this value for the field ${context.field}.`,
-          password_mismatch: "＊密碼不符",
         };
         const message = messages[context.rule.name]
           ? messages[context.rule.name]

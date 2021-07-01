@@ -36,9 +36,26 @@
           hover:text-gray-500
         "
         @click="toggleAuthModal"
+        v-if="!userLoggedIn"
       >
         <span class="hidden lg:block">註冊/登入</span>
       </div>
+      <div
+        class="
+          float-right
+          w-1/5
+          flex
+          justify-end
+          mr-1
+          cursor-pointer
+          hover:text-gray-500
+        "
+        @click="logout"
+        v-else
+      >
+        <span class="hidden lg:block">登出</span>
+      </div>
+
       <!-- hamburger button -->
       <button
         class="hamburger hamburger--elastic block lg:hidden"
@@ -55,7 +72,10 @@
   <div class="w-full" style="height: 70px"></div>
   <!-- hamburger-list -->
   <transition name="slide-fade">
-    <div class="w-full h-full bg-gray-100 fixed z-10" v-show="toggleBurger">
+    <div
+      class="w-full h-full bg-gray-100 fixed z-10 lg:hidden"
+      v-show="toggleBurger"
+    >
       <div class="w-4/5 mx-auto text-center">
         <form class="flex justify-center items-center py-4">
           <input
@@ -88,8 +108,15 @@
           <div class="cursor-pointer py-4 sm:py-0">
             <span>喜愛文章</span>
           </div>
-          <div class="cursor-pointer py-4 sm:py-0" @click="toggleAuthModal">
+          <div
+            class="cursor-pointer py-4 sm:py-0"
+            v-if="!userLoggedIn"
+            @click="toggleAuthModal"
+          >
             <span>登入 / 註冊</span>
+          </div>
+          <div class="cursor-pointer py-4 sm:py-0" v-else @click="logout">
+            <span>登出</span>
           </div>
         </div>
       </div>
@@ -98,19 +125,20 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
-import { mapMutations } from "vuex";
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 
 export default {
   name: "AppHeader",
   setup() {
+    const store = useStore();
     const toggleBurger = ref(false);
     return {
       toggleBurger,
+      userLoggedIn: computed(() => store.state.userLoggedIn),
+      logout: () => store.dispatch("logout"),
+      toggleAuthModal: () => store.commit("toggleAuthModal"),
     };
-  },
-  methods: {
-    ...mapMutations(["toggleAuthModal"]),
   },
 };
 </script>

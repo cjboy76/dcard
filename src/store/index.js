@@ -33,6 +33,26 @@ export default createStore({
       });
       commit("toggleAuth");
     },
+
+    async login({ commit }, payload) {
+      await auth.signInWithEmailAndPassword(payload.email, payload.password);
+      commit("toggleAuth");
+      console.log(auth.currentUser);
+    },
+    async logout({ commit }) {
+      await auth.signOut();
+      commit("toggleAuth");
+    },
+    // app.vue載入時呼叫
+    init_login({ commit }) {
+      // 判斷有無使用者登入
+      auth.onAuthStateChanged(function (user) {
+        if (user) {
+          // 切換 false 變 true
+          commit("toggleAuth");
+        }
+      });
+    },
   },
   modules: {},
 });

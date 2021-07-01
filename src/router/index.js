@@ -50,9 +50,6 @@ const routes = [
     // path: "*",
     path: "/:catchAll(.*)",
     name: "NotFound",
-    meta: {
-      requiresAuth: false,
-    },
     redirect: { name: "Home" },
   },
 ];

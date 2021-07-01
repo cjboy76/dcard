@@ -56,7 +56,7 @@
       <div class="py-2" v-show="currentTab == 'register'">
         <vee-form
           class="flex flex-col text-center w-4/5 mx-auto text-gray-900"
-          :validation-schema="schema_register"
+          :validation-schema="schemaRegister"
           @submit="register"
         >
           <label class="my-2"
@@ -142,14 +142,17 @@
         </div>
         <!-- warning -->
         <div class="w-4/5 mx-auto text-center py-4" v-if="showingWarning">
-          <span class="text-red-600 font-bold">X 註冊帳號失敗</span>
+          <span class="font-bold" :class="showingStyle">
+            {{ showingMessage }}
+          </span>
         </div>
       </div>
       <!-- loginform -->
       <div class="py-2" v-show="currentTab == 'login'">
         <vee-form
           class="flex flex-col text-center w-4/5 mx-auto text-gray-900"
-          :validation-schema="schema_login"
+          :validation-schema="schemaLogin"
+          @submit="login"
         >
           <label class="my-2"
             >email<vee-field
@@ -195,52 +198,44 @@
             登入
           </button>
         </vee-form>
+        <!-- spinner -->
+        <div
+          class="w-4/5 mx-auto flex justify-center p-2 spin"
+          v-if="showingSpinner"
+        >
+          <div class="w-12 h-12 rounded-full border-t-2 border-green-700"></div>
+        </div>
+        <!-- warning -->
+        <div class="w-4/5 mx-auto text-center py-4" v-if="showingWarning">
+          <span class="font-bold" :class="showingStyle">Ｘ 登入失敗</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
-import { mapState, mapMutations, useStore } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "Landing",
-  setup() {
-    const store = useStore();
-    const currentTab = ref("register");
-    const schema_register = {
-      name: "required",
-      email: "required|email",
-      password: "required|min:8",
-      confirmation: "password_mismatch:@password",
-    };
-    const showingSpinner = ref(false);
-    const showingWarning = ref(false);
-    const register = async (values) => {
-      showingSpinner.value = false;
-      showingWarning.value = false;
-      try {
-        showingSpinner.value = true;
-        await store.dispatch("register", values);
-      } catch (error) {
-        showingSpinner.value = false;
-        showingWarning.value = true;
-        return;
-      }
-      window.location.reload();
-    };
-    const schema_login = {
-      email: "required|email",
-      password: "required|min:8",
-    };
+  data() {
     return {
-      schema_register,
-      currentTab,
-      schema_login,
-      register,
-      showingSpinner,
-      showingWarning,
+      showingSpinner: false,
+      showingWarning: false,
+      showimgMessage: "",
+      showingStyle: "",
+      currentTab: "register",
+      schemaRegister: {
+        name: "required",
+        email: "required|email",
+        password: "required|min:8",
+        confirmation: "password_mismatch:@password",
+      },
+      schemaLogin: {
+        email: "required|email",
+        password: "required|min:8",
+      },
     };
   },
   computed: {
@@ -248,6 +243,39 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleAuthModal"]),
+    // register
+    async register(values) {
+      this.showingWarning = false;
+      this.showingSpinner = true;
+      try {
+        await this.$store.dispatch("register", values);
+      } catch (error) {
+        this.showingSpinner = false;
+        this.showingWarning = true;
+        this.showimgMessage = "X 註冊帳號失敗";
+        this.showingStyle = "text-red-600";
+        return;
+      }
+      this.showimgMessage = "註冊成功 已經登入";
+      this.showingStyle = "text-green-600";
+      window.location.reload();
+    },
+    // login
+    async login(values) {
+      this.showingSpinner = false;
+      this.showingWarning = false;
+      try {
+        this.showingSpinner = true;
+        await this.$store.dispatch("login", values);
+      } catch (error) {
+        this.showingSpinner = false;
+        this.showingWarning = true;
+        this.showingStyle = "text-red-600";
+        return;
+      }
+      this.showingStyle = "text-green-600";
+      window.location.reload();
+    },
   },
 };
 </script>
