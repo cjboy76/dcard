@@ -199,12 +199,7 @@
           </button>
         </vee-form>
         <!-- spinner -->
-        <div
-          class="w-4/5 mx-auto flex justify-center p-2 spin"
-          v-if="showingSpinner"
-        >
-          <div class="w-12 h-12 rounded-full border-t-2 border-green-700"></div>
-        </div>
+        <app-spinner :showingSpinner="showingSpinner" />
         <!-- warning -->
         <div class="w-4/5 mx-auto text-center py-4" v-if="showingWarning">
           <span class="font-bold" :class="showingStyle">Ｘ 登入失敗</span>
@@ -216,9 +211,13 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
+import AppSpinner from "@/components/Spinner.vue";
 
 export default {
   name: "Landing",
+  components: {
+    AppSpinner,
+  },
   data() {
     return {
       showingSpinner: false,
