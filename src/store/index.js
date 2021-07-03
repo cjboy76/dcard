@@ -46,11 +46,21 @@ export default createStore({
     init_login({ commit }) {
       // 判斷有無使用者登入
       auth.onAuthStateChanged(function (user) {
-        if (user) {
+        if (user || auth.currentUser) {
           // 切換 false 變 true
           commit("toggleAuth");
         }
       });
+    },
+    async getData() {
+      const userRef = await usersCollection.doc(auth.currentUser.uid).get();
+      return {
+        ...userRef.data(),
+      };
+    },
+    async updateData({ dispatch }, payload) {
+      await usersCollection.doc(auth.currentUser.uid).update(payload);
+      await dispatch("getData");
     },
   },
   modules: {},

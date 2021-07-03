@@ -54,10 +54,14 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from, next) => {
-  if (!to.matched.some((path) => path.meta.requiresAuth)) {
+  if (!to.matched.some((record) => record.meta.requiresAuth)) {
     next();
     return;
   }
+  // if (from.matched[0].meta.requiresAuth) {
+  //   next();
+  //   return;
+  // }
   if (store.state.userLoggedIn) {
     next();
   } else {

@@ -3,7 +3,10 @@
     <div class="container mx-auto flex justify-center items-center">
       <nav class="flex justify-start items-center container w-4/5">
         <!-- logo -->
-        <router-link :to="{ name: 'Home' }">
+        <router-link
+          :to="{ name: 'Home' }"
+          @click.prevent="toggleBurger = false"
+        >
           <img
             src="@/assets/fish.svg"
             alt="fish"
@@ -96,47 +99,55 @@
           </button>
         </form>
         <div
-          class="sm:py-4 sm:flex sm:justify-around sm:items-center"
+          class="
+            py-4
+            justify-around
+            items-center
+            flex flex-col
+            text-2xl
+            md:text-3xl
+            lg:block
+          "
           @click="toggleBurger = !toggleBurger"
         >
           <router-link
             :to="{ name: 'Allboard' }"
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer md:py-4 py-4"
           >
             <span>所有看板</span>
           </router-link>
           <router-link
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer py-4 md:py-4"
             :to="{ name: 'Rankboard' }"
           >
             <span>即時熱門看板</span>
           </router-link>
           <router-link
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer md:py-4 py-4"
             :to="{ name: 'Profile' }"
           >
             <span>個人設定</span>
           </router-link>
           <router-link
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer md:py-4 py-4"
             :to="{ name: 'Articles' }"
           >
             <span>發表文章</span>
           </router-link>
           <router-link
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer md:py-4 py-4"
             :to="{ name: 'Favs' }"
           >
             <span>喜愛文章</span>
           </router-link>
           <div
-            class="cursor-pointer py-4 sm:py-0"
+            class="cursor-pointer md:py-4 py-4"
             v-if="!userLoggedIn"
             @click="toggleAuthModal"
           >
             <span>登入 / 註冊</span>
           </div>
-          <div class="cursor-pointer py-4 sm:py-0" v-else @click="logout">
+          <div class="cursor-pointer md:py-4 py-4" v-else @click="logout">
             <span>登出</span>
           </div>
         </div>

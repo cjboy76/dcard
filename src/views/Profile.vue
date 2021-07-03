@@ -17,48 +17,19 @@
         <h1>設定</h1>
       </div>
       <!-- information -->
-      <div class="w-10/12 mx-auto">
-        <!-- 頭貼 -->
-        <div class="grid justify-center items-center pt-4">
-          <div
-            class="
-              rounded-full
-              border-2 border-gray-500
-              overflow-hidden
-              flex
-              justify-center
-              items-center
-            "
-          >
-            <!-- <img :src="user.userImage" v-if="user.userImage" /> -->
-            <img src="@/assets/user.svg" />
-          </div>
-          <button
-            class="
-              border border-gray-400
-              my-4
-              p-2
-              rounded-md
-              hover:text-gray-100 hover:bg-green-700 hover:border-green-700
-            "
-          >
-            更改照片
-          </button>
-        </div>
-        <app-profileform></app-profileform>
-      </div>
+      <app-profileinformation></app-profileinformation>
     </div>
   </div>
 </template>
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
-import AppProfileform from "@/components/Profileform";
+import AppProfileinformation from "@/components/Profileinformation";
 
 export default {
   name: "AppProfile",
   components: {
     AppMainsidebar,
-    AppProfileform,
+    AppProfileinformation,
   },
 };
 </script>

@@ -18,3 +18,15 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 0.2s linear;
+}
+.fade-leave-to {
+  transition: all 0.2s linear;
+  opacity: 0;
+}
+</style>

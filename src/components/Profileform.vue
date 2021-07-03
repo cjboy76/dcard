@@ -2,7 +2,7 @@
   <!-- 資訊欄 -->
   <div v-if="!toggleProfile">
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
-      <div class="py-6 col-start-2 col-end-6">
+      <div class="py-6 col-start-2 col-end-8">
         <label class="text-gray-400"
           >姓名<span class="ml-2 text-gray-800">
             {{ user.name }}
@@ -11,14 +11,14 @@
       </div>
     </div>
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
-      <div class="py-6 col-start-2 col-end-6">
+      <div class="py-6 col-start-2 col-end-8">
         <label class="text-gray-400"
           >性別 <span class="ml-2 text-gray-800">{{ user.gender }}</span></label
         >
       </div>
     </div>
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
-      <div class="py-6 col-start-2 col-end-6">
+      <div class="py-6 col-start-2 col-end-8">
         <label class="text-gray-400"
           >身份<span class="ml-2 text-gray-800">
             {{ user.identity }}
@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
-      <div class="py-6 col-start-2 col-end-6">
+      <div class="py-6 col-start-2 col-end-8">
         <label class="text-gray-400"
           >出生日期<span class="ml-2 text-gray-800">
             {{ user.birth }}
@@ -168,12 +168,11 @@
 
 <script>
 import AppSpinner from "@/components/Spinner.vue";
-import { usersCollection, auth } from "@/includes/firebase";
 import { ref } from "@vue/reactivity";
 
 let today = new Date();
 let dd = today.getDate();
-let mm = today.getMonth() + 1; //January is 0!
+let mm = today.getMonth() + 1;
 let yyyy = today.getFullYear();
 if (dd < 10) {
   dd = "0" + dd;
@@ -187,6 +186,10 @@ export default {
   components: {
     AppSpinner,
   },
+  props: {
+    user: Object,
+  },
+  emits: ["getData", "updateData"],
   setup() {
     const setMax = ref(today);
     return {
@@ -195,7 +198,6 @@ export default {
   },
   data() {
     return {
-      user: {},
       toggleProfile: false,
       showingSpinner: false,
       schema_profile: {
@@ -209,21 +211,14 @@ export default {
   methods: {
     async update(values) {
       this.showingSpinner = true;
-      console.log(values);
-      await usersCollection.doc(auth.currentUser.uid).update(values);
-      const userRef = await usersCollection.doc(auth.currentUser.uid).get();
-      this.user = {
-        ...userRef.data(),
-      };
+      await this.$emit("updateData", values);
+      await this.$emit("getData");
       this.showingSpinner = false;
       this.toggleProfile = false;
     },
   },
   async created() {
-    const userRef = await usersCollection.doc(auth.currentUser.uid).get();
-    this.user = {
-      ...userRef.data(),
-    };
+    this.$emit("getData");
   },
 };
 </script>
