@@ -190,35 +190,30 @@ export default {
     user: Object,
   },
   emits: ["getData", "updateData"],
-  setup() {
+  setup(props, { emit }) {
     const setMax = ref(today);
+    const toggleProfile = ref(false);
+    const showingSpinner = ref(false);
+    const schema_profile = {
+      name: "required",
+      gender: "required",
+      identity: "required",
+      birth: "required",
+    };
+    const update = async (values) => {
+      showingSpinner.value = true;
+      await emit("updateData", values);
+      await emit("getData");
+      showingSpinner.value = false;
+      toggleProfile.value = false;
+    };
     return {
       setMax,
+      toggleProfile,
+      showingSpinner,
+      schema_profile,
+      update,
     };
-  },
-  data() {
-    return {
-      toggleProfile: false,
-      showingSpinner: false,
-      schema_profile: {
-        name: "required",
-        gender: "required",
-        identity: "required",
-        birth: "required",
-      },
-    };
-  },
-  methods: {
-    async update(values) {
-      this.showingSpinner = true;
-      await this.$emit("updateData", values);
-      await this.$emit("getData");
-      this.showingSpinner = false;
-      this.toggleProfile = false;
-    },
-  },
-  async created() {
-    this.$emit("getData");
   },
 };
 </script>

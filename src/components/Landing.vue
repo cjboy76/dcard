@@ -136,14 +136,17 @@
         <!-- spinner -->
         <div
           class="w-4/5 mx-auto flex justify-center p-2 spin"
-          v-if="showingSpinner"
+          v-if="showing.showingSpinner"
         >
           <div class="w-12 h-12 rounded-full border-t-2 border-green-700"></div>
         </div>
         <!-- warning -->
-        <div class="w-4/5 mx-auto text-center py-4" v-if="showingWarning">
-          <span class="font-bold" :class="showingStyle">
-            {{ showingMessage }}
+        <div
+          class="w-4/5 mx-auto text-center py-4"
+          v-if="showing.showingWarning"
+        >
+          <span class="font-bold" :class="showing.showingStyle">
+            {{ showing.showingMessage }}
           </span>
         </div>
       </div>
@@ -199,10 +202,15 @@
           </button>
         </vee-form>
         <!-- spinner -->
-        <app-spinner :showingSpinner="showingSpinner" />
+        <app-spinner :showingSpinner="showing.showingSpinner" />
         <!-- warning -->
-        <div class="w-4/5 mx-auto text-center py-4" v-if="showingWarning">
-          <span class="font-bold" :class="showingStyle">Ｘ 登入失敗</span>
+        <div
+          class="w-4/5 mx-auto text-center py-4"
+          v-if="showing.showingWarning"
+        >
+          <span class="font-bold" :class="showing.showingStyle"
+            >Ｘ 登入失敗</span
+          >
         </div>
       </div>
     </div>
@@ -210,31 +218,74 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, useStore } from "vuex";
 import AppSpinner from "@/components/Spinner.vue";
+import { reactive, ref } from "@vue/reactivity";
 
 export default {
   name: "Landing",
   components: {
     AppSpinner,
   },
-  data() {
-    return {
+  setup() {
+    const store = useStore();
+    const showing = reactive({
       showingSpinner: false,
       showingWarning: false,
       showimgMessage: "",
       showingStyle: "",
-      currentTab: "register",
-      schemaRegister: {
-        name: "required",
-        email: "required|email",
-        password: "required|min:8",
-        confirmation: "password_mismatch:@password",
-      },
-      schemaLogin: {
-        email: "required|email",
-        password: "required|min:8",
-      },
+    });
+
+    const currentTab = ref("register");
+    const schemaRegister = {
+      name: "required",
+      email: "required|email",
+      password: "required|min:8",
+      confirmation: "password_mismatch:@password",
+    };
+    const schemaLogin = {
+      email: "required|email",
+      password: "required|min:8",
+    };
+    const register = async (values) => {
+      showing.showingWarning = false;
+      showing.showingSpinner = true;
+      try {
+        await store.dispatch("register", values);
+      } catch (error) {
+        showing.showingSpinner = false;
+        showing.showingWarning = true;
+        showing.showingMessage = "發生錯誤 請待會再嘗試";
+        showing.showingStyle = "text-red-600";
+        return;
+      }
+      showing.showingStyle = "text-green-600";
+      showing.showingMessage = "歡迎";
+      window.location.reload();
+    };
+    const login = async (values) => {
+      showing.showingWarning = false;
+      showing.showingSpinner = true;
+      try {
+        await store.dispatch("login", values);
+      } catch (error) {
+        showing.showingSpinner = false;
+        showing.showingWarning = true;
+        showing.showingMessage = "發生錯誤 請待會再嘗試";
+        showing.showingStyle = "text-red-600";
+        return;
+      }
+      showing.showingStyle = "text-green-600";
+      showing.showingMessage = "歡迎";
+      window.location.reload();
+    };
+    return {
+      showing,
+      currentTab,
+      schemaRegister,
+      schemaLogin,
+      register,
+      login,
     };
   },
   computed: {
@@ -242,39 +293,6 @@ export default {
   },
   methods: {
     ...mapMutations(["toggleAuthModal"]),
-    // register
-    async register(values) {
-      this.showingWarning = false;
-      this.showingSpinner = true;
-      try {
-        await this.$store.dispatch("register", values);
-      } catch (error) {
-        this.showingSpinner = false;
-        this.showingWarning = true;
-        this.showimgMessage = "X 註冊帳號失敗";
-        this.showingStyle = "text-red-600";
-        return;
-      }
-      this.showimgMessage = "註冊成功 已經登入";
-      this.showingStyle = "text-green-600";
-      window.location.reload();
-    },
-    // login
-    async login(values) {
-      this.showingSpinner = false;
-      this.showingWarning = false;
-      try {
-        this.showingSpinner = true;
-        await this.$store.dispatch("login", values);
-      } catch (error) {
-        this.showingSpinner = false;
-        this.showingWarning = true;
-        this.showingStyle = "text-red-600";
-        return;
-      }
-      this.showingStyle = "text-green-600";
-      window.location.reload();
-    },
   },
 };
 </script>

@@ -32,6 +32,7 @@ export default {
     const getInformation = async () => {
       state.user = await store.dispatch("getData");
     };
+    getInformation();
     const updateInformation = async (values) => {
       await store.dispatch("updateData", values);
     };
