@@ -42,19 +42,6 @@ export default {
       state,
     };
   },
-  // data() {
-  //   return {
-  //     user: {},
-  //   };
-  // },
-  // methods: {
-  //   async getInformation() {
-  //     this.user = await this.$store.dispatch("getData");
-  //   },
-  //   async updateInformation(values) {
-  //     await this.$store.dispatch("updateData", values);
-  //   },
-  // },
 };
 </script>
 

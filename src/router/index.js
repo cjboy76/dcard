@@ -52,16 +52,13 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  linkExactActiveClass: "bg-green-800",
 });
 router.beforeEach((to, from, next) => {
   if (!to.matched.some((record) => record.meta.requiresAuth)) {
     next();
     return;
   }
-  // if (from.matched[0].meta.requiresAuth) {
-  //   next();
-  //   return;
-  // }
   if (store.state.userLoggedIn) {
     next();
   } else {

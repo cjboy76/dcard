@@ -22,72 +22,47 @@
       </div>
       <!-- article -->
       <div class="container pb-8">
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> emoji_emotions </span>
-          <h2 class="ml-2">心情</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> volunteer_activism </span>
-          <h2 class="ml-2">感情</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> forum </span>
-          <h2 class="ml-2">閒聊</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> checkroom </span>
-          <h2 class="ml-2">穿搭</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
-        </article>
-        <article class="w-10/12 mx-auto py-2 border-b-2 cursor-pointer flex">
-          <span class="material-icons ml-2"> insights </span>
-          <h2 class="ml-2">星座</h2>
+        <article
+          v-for="item of state.articleList"
+          :key="item.name"
+          class="w-10/12 mx-auto py-4 border-b-2 cursor-pointer flex"
+        >
+          <span class="material-icons ml-2"> {{ item.emoji }} </span>
+          <h2 class="ml-2 text-lg">{{ item.name }}</h2>
         </article>
       </div>
     </div>
-    <app-mainprofile></app-mainprofile>
   </div>
 </template>
 
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
-import AppMainprofile from "@/components/Mainprofile.vue";
+import { reactive } from "@vue/reactivity";
 export default {
   name: "Favcomment",
   components: {
     AppMainsidebar,
-    AppMainprofile,
+  },
+  setup() {
+    const state = reactive({
+      articleList: [
+        { name: "心情", emoji: "emoji_emotions" },
+        { name: "感情", emoji: "volunteer_activism" },
+        { name: "閒聊", emoji: "forum" },
+        { name: "穿搭", emoji: "checkroom" },
+        { name: "星座", emoji: "insights" },
+        { name: "音樂", emoji: "headphones" },
+        { name: "電影", emoji: "movie" },
+        { name: "戲劇", emoji: "live_tv" },
+        { name: "美食", emoji: "restaurant" },
+        { name: "旅遊", emoji: "flight" },
+        { name: "遊戲", emoji: "sports_esports" },
+        { name: "運動", emoji: "sports_basketball" },
+      ],
+    });
+    return {
+      state,
+    };
   },
 };
 </script>

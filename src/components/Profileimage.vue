@@ -17,7 +17,7 @@
         <img
           :src="user.profileImageURL"
           v-if="user.profileImageURL"
-          class="max-w-xs"
+          class="max-w-xs w-60"
         />
         <img :src="newURL" v-else-if="newURL" class="max-w-xs" />
         <img src="@/assets/user.svg" v-else class="object-cover" />

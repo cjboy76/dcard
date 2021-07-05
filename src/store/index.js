@@ -36,6 +36,7 @@ export default createStore({
     async login({ commit }, payload) {
       await auth.signInWithEmailAndPassword(payload.email, payload.password);
       commit("toggleAuth");
+      commit("toggleAuthModal");
     },
     async logout({ commit }) {
       await auth.signOut();
@@ -44,9 +45,8 @@ export default createStore({
     },
     // app.vue載入時呼叫
     init_login({ commit }) {
-      // 判斷有無使用者登入
       auth.onAuthStateChanged(function (user) {
-        if (user || auth.currentUser) {
+        if (user) {
           // 切換 false 變 true
           commit("toggleAuth");
         }

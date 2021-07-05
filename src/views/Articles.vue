@@ -209,19 +209,16 @@
         </article>
       </div>
     </div>
-    <app-mainprofile></app-mainprofile>
   </div>
 </template>
 
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
-import AppMainprofile from "@/components/Mainprofile.vue";
 
 export default {
   name: "Articles",
   components: {
     AppMainsidebar,
-    AppMainprofile,
   },
 };
 </script>

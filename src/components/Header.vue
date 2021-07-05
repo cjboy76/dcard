@@ -1,11 +1,20 @@
 <template>
   <header class="bg-green-100 fixed top-0 w-full z-20">
-    <div class="container mx-auto flex justify-center items-center">
-      <nav class="flex justify-start items-center container w-4/5">
+    <div
+      class="
+        container
+        mx-auto
+        flex
+        justify-between
+        lg:grid lg:grid-cols-6 lg:justify-center lg:items-center
+      "
+    >
+      <nav class="flex justify-center items-center lg:col-span-4">
         <!-- logo -->
         <router-link
           :to="{ name: 'Home' }"
           @click.prevent="toggleBurger = false"
+          class="logo"
         >
           <img
             src="@/assets/fish.svg"
@@ -15,7 +24,6 @@
             class="ml-4 sm:ml-1"
           />
         </router-link>
-
         <!-- search-bar -->
         <div class="ml-4 w-5/6 hidden lg:block">
           <form class="flex justify-start items-center">
@@ -32,39 +40,26 @@
       </nav>
       <!-- login/register -->
       <div
-        class="
-          float-right
-          w-1/5
-          flex
-          justify-end
-          mr-1
-          cursor-pointer
-          hover:text-gray-500
-        "
+        class="col-start-6 cursor-pointer hover:text-gray-500"
         @click="toggleAuthModal"
         v-if="!userLoggedIn"
       >
-        <span class="hidden lg:block">註冊/登入</span>
+        <span class="hidden font-bold lg:block">註冊/登入</span>
       </div>
-      <div
-        class="
-          float-right
-          w-1/5
-          flex
-          justify-end
-          mr-1
-          cursor-pointer
-          hover:text-gray-500
-        "
-        @click="logout"
-        v-else
-      >
-        <span class="hidden font-bold lg:block">登出 </span>
+      <div v-else class="flex justify-center lg:col-span-2">
+        <div class="cursor-pointer hover:text-gray-500 flex">
+          <span class="material-icons hidden font-bold lg:block">
+            drive_file_rename_outline
+          </span>
+          <span class="hidden font-bold lg:block">建立貼文</span>
+        </div>
+        <div class="ml-8 cursor-pointer hover:text-gray-500" @click="logout">
+          <span class="hidden font-bold lg:block">登出 </span>
+        </div>
       </div>
-
       <!-- hamburger button -->
       <button
-        class="hamburger hamburger--elastic block lg:hidden"
+        class="hamburger hamburger--elastic lg:hidden"
         :class="{ 'is-active': toggleBurger }"
         type="button"
         @click="toggleBurger = !toggleBurger"
@@ -147,9 +142,14 @@
           >
             <span>登入 / 註冊</span>
           </div>
-          <div class="cursor-pointer md:py-4 py-4" v-else @click="logout">
-            <span>登出</span>
-          </div>
+          <template v-else>
+            <div class="cursor-pointer md:py-4 py-4" @click="logout">
+              <span>建立貼文</span>
+            </div>
+            <div class="cursor-pointer md:py-4 py-4" @click="logout">
+              <span>登出</span>
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -176,6 +176,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  background: transparent;
+}
 .slide-fade-enter-active {
   transition: all 0.3s linear;
 }
