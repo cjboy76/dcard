@@ -42,6 +42,11 @@ const routes = [
       import(/* webpackChunkName: "favs" */ "../views/Favcomment.vue"),
   },
   {
+    path: "/post",
+    name: "Post",
+    component: () => import(/* webpackChunkName: "post" */ "../views/Post.vue"),
+  },
+  {
     // path: "*",
     path: "/:catchAll(.*)",
     name: "NotFound",

@@ -47,12 +47,15 @@
         <span class="hidden font-bold lg:block">註冊/登入</span>
       </div>
       <div v-else class="flex justify-center lg:col-span-2">
-        <div class="cursor-pointer hover:text-gray-500 flex">
+        <router-link
+          class="cursor-pointer hover:text-gray-500 flex toPost"
+          :to="{ name: 'Post' }"
+        >
           <span class="material-icons hidden font-bold lg:block">
             drive_file_rename_outline
           </span>
           <span class="hidden font-bold lg:block">建立貼文</span>
-        </div>
+        </router-link>
         <div class="ml-8 cursor-pointer hover:text-gray-500" @click="logout">
           <span class="hidden font-bold lg:block">登出 </span>
         </div>
@@ -107,45 +110,48 @@
         >
           <router-link
             :to="{ name: 'Allboard' }"
-            class="cursor-pointer md:py-4 py-4"
+            class="burgerLink cursor-pointer md:py-4 py-4"
           >
             <span>所有看板</span>
           </router-link>
           <router-link
-            class="cursor-pointer py-4 md:py-4"
+            class="burgerLink cursor-pointer py-4 md:py-4"
             :to="{ name: 'Rankboard' }"
           >
             <span>即時熱門看板</span>
           </router-link>
           <router-link
-            class="cursor-pointer md:py-4 py-4"
+            class="burgerLink cursor-pointer md:py-4 py-4"
             :to="{ name: 'Profile' }"
           >
             <span>個人設定</span>
           </router-link>
           <router-link
-            class="cursor-pointer md:py-4 py-4"
+            class="burgerLink cursor-pointer md:py-4 py-4"
             :to="{ name: 'Articles' }"
           >
             <span>發表文章</span>
           </router-link>
           <router-link
-            class="cursor-pointer md:py-4 py-4"
+            class="burgerLink cursor-pointer md:py-4 py-4"
             :to="{ name: 'Favs' }"
           >
             <span>喜愛文章</span>
           </router-link>
           <div
-            class="cursor-pointer md:py-4 py-4"
+            class="burgerLink cursor-pointer md:py-4 py-4"
             v-if="!userLoggedIn"
             @click="toggleAuthModal"
           >
             <span>登入 / 註冊</span>
           </div>
           <template v-else>
-            <div class="cursor-pointer md:py-4 py-4" @click="logout">
+            <router-link
+              class="burgerLink cursor-pointer md:py-4 py-4"
+              :to="{ name: 'Post' }"
+            >
               <span>建立貼文</span>
-            </div>
+            </router-link>
             <div class="cursor-pointer md:py-4 py-4" @click="logout">
               <span>登出</span>
             </div>
@@ -177,6 +183,12 @@ export default {
 
 <style lang="scss" scoped>
 .logo {
+  background: transparent;
+}
+.toPost {
+  background: transparent;
+}
+.burgerLink {
   background: transparent;
 }
 .slide-fade-enter-active {
