@@ -5,6 +5,20 @@ export default createStore({
   state: {
     authModalShow: false,
     userLoggedIn: false,
+    boardList: [
+      { name: "心情", emoji: "emoji_emotions" },
+      { name: "感情", emoji: "volunteer_activism" },
+      { name: "閒聊", emoji: "forum" },
+      { name: "穿搭", emoji: "checkroom" },
+      { name: "星座", emoji: "insights" },
+      { name: "音樂", emoji: "headphones" },
+      { name: "電影", emoji: "movie" },
+      { name: "戲劇", emoji: "live_tv" },
+      { name: "美食", emoji: "restaurant" },
+      { name: "旅遊", emoji: "flight" },
+      { name: "遊戲", emoji: "sports_esports" },
+      { name: "運動", emoji: "sports_basketball" },
+    ],
   },
   mutations: {
     toggleAuthModal(state) {
