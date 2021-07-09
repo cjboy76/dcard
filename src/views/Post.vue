@@ -3,6 +3,7 @@
     class="mx-auto lg:grid lg:grid-cols-10 lg:gap-4"
     style="margin-top: -70px"
   >
+    <!-- editing -->
     <div
       v-show="CurrentStatus == 'editing'"
       class="col-start-2 col-end-10 h-screen bg-gray-100"
@@ -33,7 +34,7 @@
                 py-2
                 px-4
                 rounded-md
-                hover:bg-gray-600 hover:text-gray-100
+                hover:bg-gray-400 hover:text-gray-100
               "
             >
               選擇發文看板
@@ -89,8 +90,9 @@
                 <span class="material-icons text-gray-500">
                   add_photo_alternate
                 </span>
-                <span class="text-gray-500">添加照片</span>
+                <span class="text-gray-500"> * 限制一張</span>
                 <input
+                  :disabled="photoAllow"
                   type="file"
                   accept="image/jpeg"
                   class="w-0"
@@ -124,6 +126,7 @@
         </form>
       </div>
     </div>
+    <!-- review -->
     <div
       v-show="CurrentStatus == 'review'"
       class="col-start-2 col-end-10 h-screen bg-gray-100"
@@ -143,7 +146,7 @@
         >
           <h1>預覽貼文</h1>
         </div>
-        <form @submit.prevent="nextStep" class="w-10/12 mx-auto bg-gray-100">
+        <form @submit.prevent="submit" class="w-10/12 mx-auto bg-gray-100">
           <div class="flex justify0center items-center py-4">
             <div class="outline-none bg-gray-200 py-2 px-4 rounded-md">
               {{ postForm.boardType }}
@@ -197,9 +200,11 @@
                   取消
                 </router-link>
                 <button
+                  :disabled="submissionAllow"
                   class="
-                    bg-gray-500
-                    text-gray-100
+                    bg-gray-200
+                    text-gray-600
+                    hover:bg-gray-600 hover:text-gray-100
                     rounded-md
                     py-2
                     px-4
@@ -226,7 +231,12 @@
 import AppWarning from "@/components/Warning.vue";
 import { computed, reactive } from "@vue/runtime-core";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { storage, auth, timeStamp } from "../includes/firebase";
+import { articlesCollection } from "@/includes/firebase";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 let currentTime = new Date();
 let month = currentTime.getMonth() + 1;
@@ -236,16 +246,25 @@ let minute = currentTime.getMinutes();
 currentTime = `${month}月${date}日  ${hour}:${
   minute < 10 ? "0" + minute : minute
 }`;
+const storageRef = storage.ref();
 export default {
   components: {
     AppWarning,
   },
   setup() {
+    const submissionAllow = ref(false);
     const store = useStore();
     const editArea = ref(null);
-    // const submissionAllow = computed(() =>
-    //   postForm.title == "" || postForm.boardType == "" ? true : false
-    // );
+    const postForm = reactive({
+      boardType: "",
+      title: "",
+      content: "",
+      text: "",
+      images: [],
+    });
+    const photoAllow = computed(() => {
+      postForm.images.length == 0 ? false : true;
+    });
     // 添加照片
     const addPhoto = (event) => {
       const file = event.target.files[0];
@@ -256,14 +275,11 @@ export default {
         img.setAttribute("src", event.target.result);
       };
       reader.readAsDataURL(file);
+      postForm.images.push(file);
       img.classList.add("max-w-xs", "lg:max-w-md");
       editArea.value.appendChild(img);
     };
-    const postForm = reactive({
-      boardType: "",
-      title: "",
-      content: "",
-    });
+
     const CurrentStatus = ref("editing");
     const reviewArea = ref(null);
     const showingWarning = ref(false);
@@ -272,10 +288,51 @@ export default {
         showingWarning.value = true;
         return;
       }
-      console.log(postForm);
       postForm.content = editArea.value.innerHTML;
+      postForm.text = editArea.value.innerText;
       reviewArea.value.innerHTML = postForm.content;
       CurrentStatus.value = "review";
+    };
+    const router = useRouter();
+    // send data
+    const submit = async () => {
+      NProgress.start();
+      submissionAllow.value = true;
+      const imagesURLs = [];
+
+      await Promise.all(
+        postForm.images.map(async (file) => {
+          const userImagesRef = storageRef.child(
+            `userArticlesImage/${auth.currentUser.uid}/${file.name}`
+          );
+          const { task } = await userImagesRef.put(file);
+          const url = await task.snapshot.ref.getDownloadURL();
+          imagesURLs.push(url);
+        })
+      );
+      try {
+        await articlesCollection
+          .doc(auth.currentUser.uid)
+          .collection("articles")
+          .add({
+            boardType: postForm.boardType,
+            title: postForm.title,
+            content: postForm.content,
+            text: postForm.text,
+            imagesURL: imagesURLs,
+            createdAt: timeStamp(),
+            comments: 0,
+            likes: 0,
+          });
+      } catch (error) {
+        console.log(error);
+        submissionAllow.value = false;
+        NProgress.done();
+        return;
+      }
+      submissionAllow.value = false;
+      router.push({ name: "Articles" });
+      NProgress.done();
     };
     return {
       currentTime,
@@ -283,11 +340,13 @@ export default {
       addPhoto,
       editArea,
       postForm,
-      //   submissionAllow,
       nextStep,
       showingWarning,
       CurrentStatus,
       reviewArea,
+      submit,
+      submissionAllow,
+      photoAllow,
     };
   },
 };

@@ -2,7 +2,8 @@
   <div class="commercial col-span-1 hidden lg:block" v-if="userLoggedIn">
     <div class="py-4 flex mx-auto w-4/5 sticky top-24">
       <!-- image -->
-      <div
+      <router-link
+        :to="{ name: 'Profile' }"
         class="
           rounded-full
           h-16
@@ -20,10 +21,12 @@
           class="max-w-xs w-24"
         />
         <img v-else src="../assets/user.svg" class="object-cover" />
-      </div>
+      </router-link>
       <!-- name -->
       <div class="flex justify-center items-center ml-4 text-gray-100">
-        <span>{{ state.user.name }}</span>
+        <router-link :to="{ name: 'Profile' }">
+          {{ state.user.name }}
+        </router-link>
       </div>
     </div>
   </div>
@@ -40,7 +43,6 @@ export default {
     const store = useStore();
     const getData = async () => {
       state.user = await store.dispatch("getData");
-      console.log(state.user);
     };
     getData();
     return {

@@ -2,7 +2,7 @@
   <div
     class="home container mx-auto mt-8 lg:grid lg:grid-cols-5 lg:gap-4 lg:mt-4"
   >
-    <app-mainsidebar></app-mainsidebar>
+    <app-mainsidebar />
     <div class="col-start-2 col-end-5 bg-gray-100 lg:rounded-xl">
       <!-- header -->
       <div
@@ -32,11 +32,13 @@
         </article>
       </div>
     </div>
+    <app-mainprofile />
   </div>
 </template>
 
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
+import AppMainprofile from "@/components/Mainprofile.vue";
 import { useStore } from "vuex";
 import { computed } from "@vue/runtime-core";
 
@@ -44,6 +46,7 @@ export default {
   name: "Favcomment",
   components: {
     AppMainsidebar,
+    AppMainprofile,
   },
   setup() {
     const store = useStore();

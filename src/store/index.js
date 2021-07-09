@@ -59,12 +59,11 @@ export default createStore({
     },
     // app.vue載入時呼叫
     init_login({ commit }) {
-      auth.onAuthStateChanged(function (user) {
-        if (user) {
-          // 切換 false 變 true
-          commit("toggleAuth");
-        }
-      });
+      const user = auth.currentUser;
+      if (user) {
+        // 切換 false 變 true
+        commit("toggleAuth");
+      }
     },
     async getData() {
       const userRef = await usersCollection.doc(auth.currentUser.uid).get();
@@ -76,6 +75,8 @@ export default createStore({
       await usersCollection.doc(auth.currentUser.uid).update(payload);
       await dispatch("getData");
     },
+    // async getOwnArticles(){
+    //   await ownArtCollection.get();
+    // }
   },
-  modules: {},
 });

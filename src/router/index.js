@@ -34,17 +34,26 @@ const routes = [
     name: "Articles",
     component: () =>
       import(/* webpackChunkName: "articles" */ "../views/Articles.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/favs",
     name: "Favs",
     component: () =>
       import(/* webpackChunkName: "favs" */ "../views/Favcomment.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/post",
     name: "Post",
     component: () => import(/* webpackChunkName: "post" */ "../views/Post.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     // path: "*",

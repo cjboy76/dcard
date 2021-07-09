@@ -17,7 +17,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
+const timeStamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const usersCollection = db.collection("users");
+const articlesCollection = db.collection("articles");
 
-export { db, auth, usersCollection, storage };
+export { db, auth, usersCollection, storage, articlesCollection, timeStamp };
