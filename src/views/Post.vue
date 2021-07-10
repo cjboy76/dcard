@@ -27,7 +27,7 @@
           <div class="flex justify0center items-center py-4">
             <select
               required
-              v-model="postForm.boardType"
+              v-model="postForm.board"
               class="
                 outline-none
                 bg-gray-200
@@ -39,7 +39,7 @@
             >
               選擇發文看板
               <option value="" disabled selected>選擇發文看板</option>
-              <option v-for="item of boardList" :key="item.name">
+              <option v-for="item of boardList" :key="item.key" :value="item">
                 {{ item.name }}
               </option>
             </select>
@@ -149,7 +149,7 @@
         <form @submit.prevent="submit" class="w-10/12 mx-auto bg-gray-100">
           <div class="flex justify0center items-center py-4">
             <div class="outline-none bg-gray-200 py-2 px-4 rounded-md">
-              {{ postForm.boardType }}
+              {{ postForm.board.name }}
             </div>
             <div class="ml-2 text-gray-500">{{ currentTime }}</div>
           </div>
@@ -254,9 +254,10 @@ export default {
   setup() {
     const submissionAllow = ref(false);
     const store = useStore();
+    const boardList = computed(() => store.state.boardList);
     const editArea = ref(null);
     const postForm = reactive({
-      boardType: "",
+      board: "",
       title: "",
       content: "",
       text: "",
@@ -283,8 +284,9 @@ export default {
     const CurrentStatus = ref("editing");
     const reviewArea = ref(null);
     const showingWarning = ref(false);
+    // next step to review
     const nextStep = () => {
-      if (!editArea.value.innerHTML || !postForm.title || !postForm.boardType) {
+      if (!editArea.value.innerHTML || !postForm.title || !postForm.board) {
         showingWarning.value = true;
         return;
       }
@@ -299,7 +301,6 @@ export default {
       NProgress.start();
       submissionAllow.value = true;
       const imagesURLs = [];
-
       await Promise.all(
         postForm.images.map(async (file) => {
           const userImagesRef = storageRef.child(
@@ -313,9 +314,10 @@ export default {
       try {
         await articlesCollection
           .doc(auth.currentUser.uid)
-          .collection("articles")
+          .collection("userArticles")
           .add({
-            boardType: postForm.boardType,
+            boardName: postForm.board.name,
+            boardKey: postForm.board.key,
             title: postForm.title,
             content: postForm.content,
             text: postForm.text,
@@ -331,12 +333,12 @@ export default {
         return;
       }
       submissionAllow.value = false;
-      router.push({ name: "Articles" });
+      router.push({ name: "Myarticles" });
       NProgress.done();
     };
     return {
       currentTime,
-      boardList: computed(() => store.state.boardList),
+      boardList,
       addPhoto,
       editArea,
       postForm,

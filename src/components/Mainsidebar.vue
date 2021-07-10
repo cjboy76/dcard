@@ -69,7 +69,7 @@
           <div class="ml-2">個人設定</div>
         </div>
       </router-link>
-      <router-link :to="{ name: 'Articles' }" class="w-full">
+      <router-link :to="{ name: 'Myarticles' }" class="w-full">
         <div
           class="
             flex
@@ -87,7 +87,7 @@
           <div class="ml-2">發表文章</div>
         </div>
       </router-link>
-      <router-link :to="{ name: 'Favs' }" class="w-full">
+      <router-link :to="{ name: 'Favarticles' }" class="w-full">
         <div
           class="
             flex

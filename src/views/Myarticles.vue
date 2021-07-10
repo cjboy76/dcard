@@ -23,7 +23,7 @@
       <!-- article -->
       <div class="container pb-8">
         <div class="bg-gray-100">
-          <!-- default -->
+          <!-- default with no articles-->
           <article
             class="w-10/12 mx-auto py-2 border-b-2"
             v-if="defaultDisplay"
@@ -32,6 +32,7 @@
               還沒建立過文章噢 ～
             </div>
           </article>
+          <!-- articles exits -->
           <article
             v-else
             v-for="item in state.artList"
@@ -40,7 +41,7 @@
           >
             <div class="article-text col-span-2 w-11/12 mx-auto">
               <div class="boardtype text-gray-400 py-1">
-                <span>{{ item.boardType }}</span>
+                <span>{{ item.boardName }}</span>
               </div>
               <h2 class="font-bold text-lg" style="text-overflow: ellipsis">
                 {{ item.title }}
@@ -86,7 +87,7 @@ import AppMainprofile from "@/components/Mainprofile.vue";
 import { reactive, ref } from "@vue/reactivity";
 
 export default {
-  name: "Articles",
+  name: "Myarticles",
   components: {
     AppMainsidebar,
     AppMainprofile,
@@ -97,7 +98,7 @@ export default {
     const getOwnArticles = async () => {
       const snapshot = await articlesCollection
         .doc(auth.currentUser.uid)
-        .collection("articles")
+        .collection("userArticles")
         .get();
       if (!snapshot.empty) defaultDisplay.value = false;
       let targetList = [];
@@ -107,7 +108,6 @@ export default {
           docID: doc.id,
         })
       );
-      console.log(...targetList);
       state.artList = targetList;
     };
     getOwnArticles();

@@ -8,41 +8,47 @@ const routes = [
     name: "Home",
     component: Home,
   },
+
   {
-    path: "/allboard",
-    name: "Allboard",
+    path: "/:boardKey/a/:aID",
     component: () =>
-      import(/* webpackChunkName: "allboard" */ "../views/Allboard.vue"),
+      import(/* webpackChunkName: "Article" */ "../views/Article.vue"),
   },
   {
-    path: "/rankboard",
+    path: "/all",
+    name: "Allboard",
+    component: () =>
+      import(/* webpackChunkName: "Allboard" */ "../views/Allboard.vue"),
+  },
+  {
+    path: "/rk",
     name: "Rankboard",
     component: () =>
-      import(/* webpackChunkName: "rankboard" */ "../views/Rankboard.vue"),
+      import(/* webpackChunkName: "Rankboard" */ "../views/Rankboard.vue"),
   },
   {
     path: "/profile",
     name: "Profile",
     component: () =>
-      import(/* webpackChunkName: "profile" */ "../views/Profile.vue"),
+      import(/* webpackChunkName: "Profile" */ "../views/Profile.vue"),
     meta: {
       requiresAuth: true,
     },
   },
   {
-    path: "/articles",
-    name: "Articles",
+    path: "/mas",
+    name: "Myarticles",
     component: () =>
-      import(/* webpackChunkName: "articles" */ "../views/Articles.vue"),
+      import(/* webpackChunkName: "Myarticles" */ "../views/Myarticles.vue"),
     meta: {
       requiresAuth: true,
     },
   },
   {
     path: "/favs",
-    name: "Favs",
+    name: "Favarticles",
     component: () =>
-      import(/* webpackChunkName: "favs" */ "../views/Favcomment.vue"),
+      import(/* webpackChunkName: "Favarticles" */ "../views/Favarticles.vue"),
     meta: {
       requiresAuth: true,
     },
@@ -50,7 +56,7 @@ const routes = [
   {
     path: "/post",
     name: "Post",
-    component: () => import(/* webpackChunkName: "post" */ "../views/Post.vue"),
+    component: () => import(/* webpackChunkName: "Post" */ "../views/Post.vue"),
     meta: {
       requiresAuth: true,
     },

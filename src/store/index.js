@@ -6,18 +6,18 @@ export default createStore({
     authModalShow: false,
     userLoggedIn: false,
     boardList: [
-      { name: "心情", emoji: "emoji_emotions" },
-      { name: "感情", emoji: "volunteer_activism" },
-      { name: "閒聊", emoji: "forum" },
-      { name: "穿搭", emoji: "checkroom" },
-      { name: "星座", emoji: "insights" },
-      { name: "音樂", emoji: "headphones" },
-      { name: "電影", emoji: "movie" },
-      { name: "戲劇", emoji: "live_tv" },
-      { name: "美食", emoji: "restaurant" },
-      { name: "旅遊", emoji: "flight" },
-      { name: "遊戲", emoji: "sports_esports" },
-      { name: "運動", emoji: "sports_basketball" },
+      { name: "心情", emoji: "emoji_emotions", key: "emotion" },
+      { name: "感情", emoji: "volunteer_activism", key: "relationship" },
+      { name: "閒聊", emoji: "forum", key: "gossip" },
+      { name: "穿搭", emoji: "checkroom", key: "outfit" },
+      { name: "星座", emoji: "insights", key: "starsign" },
+      { name: "音樂", emoji: "headphones", key: "music" },
+      { name: "電影", emoji: "movie", key: "movie" },
+      { name: "戲劇", emoji: "live_tv", key: "drama" },
+      { name: "美食", emoji: "restaurant", key: "food" },
+      { name: "旅遊", emoji: "flight", key: "travel" },
+      { name: "遊戲", emoji: "sports_esports", key: "game" },
+      { name: "運動", emoji: "sports_basketball", key: "sport" },
     ],
   },
   mutations: {
@@ -75,8 +75,5 @@ export default createStore({
       await usersCollection.doc(auth.currentUser.uid).update(payload);
       await dispatch("getData");
     },
-    // async getOwnArticles(){
-    //   await ownArtCollection.get();
-    // }
   },
 });

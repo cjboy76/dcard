@@ -128,13 +128,13 @@
           </router-link>
           <router-link
             class="burgerLink cursor-pointer md:py-4 py-4"
-            :to="{ name: 'Articles' }"
+            :to="{ name: 'Myarticles' }"
           >
             <span>發表文章</span>
           </router-link>
           <router-link
             class="burgerLink cursor-pointer md:py-4 py-4"
-            :to="{ name: 'Favs' }"
+            :to="{ name: 'Favarticles' }"
           >
             <span>喜愛文章</span>
           </router-link>
