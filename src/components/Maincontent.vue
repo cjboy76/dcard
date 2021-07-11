@@ -41,7 +41,7 @@
           <div class="comments flex py-2">
             <span class="material-icons"> insert_comment </span>
             <div class="span">10</div>
-            <span class="material-icons"> favorite_border </span>
+            <span class="material-icons ml-2"> favorite_border </span>
             <div class="span">10</div>
           </div>
         </div>

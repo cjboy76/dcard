@@ -18,16 +18,24 @@
           bg-gray-100
         "
       >
-        <h1>hehehe</h1>
+        <h1>文章</h1>
       </div>
       <!-- article -->
-      <div class="container pb-8">
+      <div class="w-10/12 mx-auto pb-8">
         <div class="bg-gray-100">
-          <!-- default -->
-          <article class="w-10/12 mx-auto py-2 border-b-2">
-            <div class="article-text w-11/12 mx-auto text-center text-2xl py-8">
-              for testing
+          <div class="flex justify-start items-center my-2">
+            <div class="w-12 h-12 rounded-full bg-red-300">
+              <img src="" alt="" />
             </div>
+            <span class="text-lg font-semibold ml-2">userName</span>
+          </div>
+          <article>
+            <div class="my-4">
+              <h1 class="text-3xl font-semibold">title</h1>
+              <span class="text-green-600">boardtype</span>
+              <span class="text-gray-400 ml-2">time</span>
+            </div>
+            <div class="article"></div>
           </article>
         </div>
       </div>
@@ -37,7 +45,15 @@
 </template>
 
 <script>
-export default {};
+import AppMainsidebar from "@/components/Mainsidebar.vue";
+import AppMainprofile from "@/components/Mainprofile.vue";
+
+export default {
+  components: {
+    AppMainsidebar,
+    AppMainprofile,
+  },
+};
 </script>
 
 <style></style>

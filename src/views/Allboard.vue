@@ -23,6 +23,7 @@
       <!-- article -->
       <div class="container pb-8">
         <article
+          @click="routerPush(item.key)"
           v-for="item of boardList"
           :key="item.name"
           class="w-10/12 mx-auto py-4 border-b-2 cursor-pointer flex"
@@ -40,6 +41,7 @@
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { computed } from "@vue/runtime-core";
 
 export default {
@@ -50,8 +52,13 @@ export default {
   },
   setup() {
     const store = useStore();
+    const router = useRouter();
+    const routerPush = (value) => {
+      router.push({ name: "Articleforum", params: { boardKey: value } });
+    };
     return {
       boardList: computed(() => store.state.boardList),
+      routerPush,
     };
   },
 };

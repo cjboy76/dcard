@@ -23,6 +23,9 @@
       <!-- article -->
       <div class="container mb-8">
         <article
+          @click="routerPush(item.key)"
+          v-for="(item, index) of boardList"
+          :key="item.key"
           class="
             w-10/12
             mx-auto
@@ -34,209 +37,11 @@
             items-center
           "
         >
-          <span class="ml-2">1</span>
+          <span class="ml-2">{{ index + 1 }}</span>
           <div class="rounded-full overflow-hidden ml-3">
             <img src="https://picsum.photos/60/60?random=1" alt="" />
           </div>
-          <h2 class="ml-3">心情</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">2</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">感情</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">3</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">閒聊</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">4</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">穿搭</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
-        </article>
-        <article
-          class="
-            w-10/12
-            mx-auto
-            py-2
-            border-b-2
-            cursor-pointer
-            flex
-            justify-start
-            items-center
-          "
-        >
-          <span class="ml-2">5</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
-          </div>
-          <h2 class="ml-3">星座</h2>
+          <h2 class="ml-3">{{ item.name }}</h2>
         </article>
       </div>
     </div>
@@ -247,12 +52,26 @@
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { computed } from "@vue/runtime-core";
 
 export default {
   name: "Favcomment",
   components: {
     AppMainsidebar,
     AppMainprofile,
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
+    const routerPush = (value) => {
+      router.push({ name: "Articleforum", params: { boardKey: value } });
+    };
+    return {
+      boardList: computed(() => store.state.boardList),
+      routerPush,
+    };
   },
 };
 </script>

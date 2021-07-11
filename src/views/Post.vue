@@ -238,35 +238,41 @@ import { articlesCollection } from "@/includes/firebase";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
-let currentTime = new Date();
-let month = currentTime.getMonth() + 1;
-let date = currentTime.getDate();
-let hour = currentTime.getHours();
-let minute = currentTime.getMinutes();
-currentTime = `${month}月${date}日  ${hour}:${
-  minute < 10 ? "0" + minute : minute
-}`;
 const storageRef = storage.ref();
 export default {
   components: {
     AppWarning,
   },
   setup() {
-    const submissionAllow = ref(false);
     const store = useStore();
+    const router = useRouter();
+    const state = reactive({ user: {} });
     const boardList = computed(() => store.state.boardList);
+    const CurrentStatus = ref("editing");
+    const currentTime = computed(() => {
+      let time = new Date();
+      let month = time.getMonth() + 1;
+      let date = time.getDate();
+      let hour = time.getHours();
+      let minute = time.getMinutes();
+      time = `${month}月${date}日  ${hour}:${
+        minute < 10 ? "0" + minute : minute
+      }`;
+      return time;
+    });
+    // editing
+    const submissionAllow = ref(false);
     const editArea = ref(null);
     const postForm = reactive({
       board: "",
       title: "",
       content: "",
       text: "",
-      images: [],
+      images: null,
     });
     const photoAllow = computed(() => {
-      postForm.images.length == 0 ? false : true;
+      postForm.images ? true : false;
     });
-    // 添加照片
     const addPhoto = (event) => {
       const file = event.target.files[0];
       const img = document.createElement("img");
@@ -276,15 +282,11 @@ export default {
         img.setAttribute("src", event.target.result);
       };
       reader.readAsDataURL(file);
-      postForm.images.push(file);
+      postForm.images = file;
       img.classList.add("max-w-xs", "lg:max-w-md");
       editArea.value.appendChild(img);
     };
-
-    const CurrentStatus = ref("editing");
-    const reviewArea = ref(null);
     const showingWarning = ref(false);
-    // next step to review
     const nextStep = () => {
       if (!editArea.value.innerHTML || !postForm.title || !postForm.board) {
         showingWarning.value = true;
@@ -295,23 +297,19 @@ export default {
       reviewArea.value.innerHTML = postForm.content;
       CurrentStatus.value = "review";
     };
-    const router = useRouter();
-    // send data
+    //review
+    const reviewArea = ref(null);
     const submit = async () => {
       NProgress.start();
       submissionAllow.value = true;
-      const imagesURLs = [];
-      await Promise.all(
-        postForm.images.map(async (file) => {
-          const userImagesRef = storageRef.child(
-            `userArticlesImage/${auth.currentUser.uid}/${file.name}`
-          );
-          const { task } = await userImagesRef.put(file);
-          const url = await task.snapshot.ref.getDownloadURL();
-          imagesURLs.push(url);
-        })
+      const userImagesRef = storageRef.child(
+        `userArticlesImage/${auth.currentUser.uid}/${postForm.images.name}`
       );
+      const { task } = await userImagesRef.put(postForm.images);
+      const url = await task.snapshot.ref.getDownloadURL();
       try {
+        state.user = await store.dispatch("getData");
+        console.log(state);
         await articlesCollection
           .doc(auth.currentUser.uid)
           .collection("userArticles")
@@ -321,10 +319,11 @@ export default {
             title: postForm.title,
             content: postForm.content,
             text: postForm.text,
-            imagesURL: imagesURLs,
+            imagesURL: url,
             createdAt: timeStamp(),
             comments: 0,
             likes: 0,
+            author: state.user,
           });
       } catch (error) {
         console.log(error);

@@ -10,7 +10,14 @@ const routes = [
   },
 
   {
+    path: "/:boardKey",
+    name: "Articleforum",
+    component: () =>
+      import(/* webpackChunkName: "Article" */ "../views/Articleforum.vue"),
+  },
+  {
     path: "/:boardKey/a/:aID",
+    name: "Article",
     component: () =>
       import(/* webpackChunkName: "Article" */ "../views/Article.vue"),
   },

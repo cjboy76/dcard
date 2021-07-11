@@ -32,12 +32,20 @@
               還沒建立過文章噢 ～
             </div>
           </article>
-          <!-- articles exits -->
+          <!-- if articles exits -->
           <article
+            @click="routerPush(item.key, item.docID)"
             v-else
             v-for="item in state.artList"
             :key="item.docID"
-            class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2"
+            class="
+              w-10/12
+              mx-auto
+              grid grid-cols-3
+              py-2
+              border-b-2
+              cursor-pointer
+            "
           >
             <div class="article-text col-span-2 w-11/12 mx-auto">
               <div class="boardtype text-gray-400 py-1">
@@ -69,7 +77,7 @@
                   items-center
                 "
               >
-                <img :src="item.imagesURL[0]" class="max-w-xs" />
+                <img :src="item.imagesURL" class="max-w-xs" />
               </div>
             </div>
           </article>
@@ -85,6 +93,7 @@ import { articlesCollection, auth } from "../includes/firebase";
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
 import { reactive, ref } from "@vue/reactivity";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Myarticles",
@@ -93,6 +102,7 @@ export default {
     AppMainprofile,
   },
   setup() {
+    const router = useRouter();
     const state = reactive({ artList: [] });
     const defaultDisplay = ref(true);
     const getOwnArticles = async () => {
@@ -111,9 +121,13 @@ export default {
       state.artList = targetList;
     };
     getOwnArticles();
+    const routerPush = (key, id) => {
+      router.push({ name: "Article", params: { boardKey: key, aID: id } });
+    };
     return {
       state,
       defaultDisplay,
+      routerPush,
     };
   },
 };

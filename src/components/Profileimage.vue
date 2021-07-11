@@ -70,6 +70,7 @@ export default {
         return;
       }
       newURL.value = url;
+      window.location.reload();
     };
     return {
       upload,

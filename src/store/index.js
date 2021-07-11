@@ -39,7 +39,6 @@ export default createStore({
       await usersCollection.doc(userCredential.user.uid).set({
         name: payload.name,
         email: payload.email,
-        password: payload.password,
       });
       // firebase set document data's property
       await userCredential.user.updateProfile({
