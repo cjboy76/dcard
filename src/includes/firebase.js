@@ -21,5 +21,14 @@ const timeStamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const usersCollection = db.collection("users");
 const articlesCollection = db.collection("articles");
+const commentsCollection = db.collection("comments");
 
-export { db, auth, usersCollection, storage, articlesCollection, timeStamp };
+export {
+  db,
+  auth,
+  usersCollection,
+  storage,
+  articlesCollection,
+  timeStamp,
+  commentsCollection,
+};

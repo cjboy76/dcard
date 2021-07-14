@@ -92,7 +92,7 @@
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
 import AppArticlecomment from "@/components/Articlecomment.vue";
-import { articlesCollection, auth, timeStamp, db } from "@/includes/firebase";
+import { auth, timeStamp, db, commentsCollection } from "@/includes/firebase";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { reactive, ref, computed } from "@vue/reactivity";
 
@@ -137,16 +137,14 @@ export default {
       state.article.likes += 1;
       state.article.likesStatus = true;
     };
+
     // comment part
     const submission = ref(false);
-    const commentRef = articlesCollection
-      .doc(auth.currentUser.uid)
-      .collection("userArticles")
-      .doc(route.params.aID)
-      .collection("articleComments");
     const getComment = async () => {
       const list = [];
-      const snapshots = await commentRef
+      const snapshots = await commentsCollection
+        .doc(route.params.aID)
+        .collection("commentList")
         .orderBy("createdAt", "desc")
         .limit(10)
         .get();
@@ -159,6 +157,7 @@ export default {
       state.commentList = list;
     };
     getComment();
+
     const currentTime = computed(() => {
       let time = new Date();
       let month = time.getMonth() + 1;
@@ -174,14 +173,18 @@ export default {
       submission.value = true;
       if (!value) return;
       try {
-        await commentRef.add({
-          postingtime: currentTime.value,
-          content: value,
-          name: auth.currentUser.displayName,
-          createdAt: timeStamp(),
-          likesNum: 0,
-          likesStatus: false,
-        });
+        await commentsCollection
+          .doc(route.params.aID)
+          .collection("commentList")
+          .add({
+            postingtime: currentTime.value,
+            content: value,
+            name: auth.currentUser.displayName,
+            createdAt: timeStamp(),
+            likesNum: 0,
+            likesStatus: false,
+            articleID: route.params.aID,
+          });
       } catch (error) {
         submission.value = false;
         alert("留言失敗，請稍後再嘗試");
@@ -211,9 +214,7 @@ export default {
         .collectionGroup("userArticles")
         .where("docID", "==", route.params.aID)
         .get();
-      // await db
-      //   .collectionGroup("userArticles")
-      //   .where("docID", "==", route.params.aID)
+
       await Promise.all(
         articleSnapshot.docs.map(async (snapshot) => {
           await snapshot.ref.update({
@@ -226,10 +227,14 @@ export default {
 
       await Promise.all(
         likeList.value.map(async (item) => {
-          await commentRef.doc(item.id).update({
-            likesStatus: state.commentList[item.i].likesStatus,
-            likesNum: state.commentList[item.i].likesNum,
-          });
+          await commentsCollection
+            .doc(route.params.aID)
+            .collection("commentList")
+            .doc(item.id)
+            .update({
+              likesStatus: state.commentList[item.i].likesStatus,
+              likesNum: state.commentList[item.i].likesNum,
+            });
         })
       );
       next();
