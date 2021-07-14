@@ -60,16 +60,8 @@
             <div class="article overflow-y-scroll">
               <div v-html="state.article.content"></div>
             </div>
-            <!-- likes && comments number -->
+            <!-- comments number -->
             <div class="my-6 flex items-center">
-              <span
-                @click="likeArticle"
-                class="material-icons ml-2 cursor-pointer"
-                :class="{ 'text-red-400': state.article.likesStatus }"
-              >
-                favorite_border
-              </span>
-              <span>{{ state.article.likes }}</span>
               <span class="material-icons ml-2"> insert_comment </span>
               <span>{{ state.commentList.length }}</span>
             </div>
@@ -79,7 +71,6 @@
       <!-- leaving comments -->
       <app-articlecomment
         @addComment="addComment"
-        @updateCommentLike="updateCommentLike"
         :state="state"
         :submisstion="submission"
       />
@@ -109,8 +100,8 @@ export default {
       article: {},
       commentList: [],
     });
+    // const likesStatus = ref(false);
     const borderColor = ref("border-gray-700");
-
     const initial = async () => {
       const list = [];
       const articleSnapshot = await db
@@ -128,15 +119,6 @@ export default {
       }
     };
     initial();
-    const likeArticle = () => {
-      if (state.article.likesStatus) {
-        state.article.likes += -1;
-        state.article.likesStatus = false;
-        return;
-      }
-      state.article.likes += 1;
-      state.article.likesStatus = true;
-    };
 
     // comment part
     const commentRef = db
@@ -192,21 +174,6 @@ export default {
       submission.value = false;
       getComment();
     };
-    const likeList = ref([]);
-    const updateCommentLike = (index, docID) => {
-      const target = state.commentList[index];
-      if (target.likesStatus) {
-        target.likesNum += -1;
-        target.likesStatus = false;
-        likeList.value = likeList.value.filter((item) => {
-          return item != docID;
-        });
-        return;
-      }
-      target.likesNum += 1;
-      target.likesStatus = true;
-      likeList.value.push({ id: docID, i: index });
-    };
     // before leaving && upload data
     onBeforeRouteLeave(async (to, from, next) => {
       const articleSnapshot = await db
@@ -218,17 +185,6 @@ export default {
         articleSnapshot.docs.map(async (snapshot) => {
           await snapshot.ref.update({
             comments: state.commentList.length,
-            likes: state.article.likes,
-            likesStatus: state.article.likesStatus,
-          });
-        })
-      );
-
-      await Promise.all(
-        likeList.value.map(async (item) => {
-          await commentRef.doc(item.id).update({
-            likesStatus: state.commentList[item.i].likesStatus,
-            likesNum: state.commentList[item.i].likesNum,
           });
         })
       );
@@ -237,9 +193,7 @@ export default {
 
     return {
       state,
-      likeArticle,
       borderColor,
-      updateCommentLike,
       submission,
       addComment,
     };

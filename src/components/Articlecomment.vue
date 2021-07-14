@@ -58,26 +58,14 @@
     <!-- content if data exist -->
     <div
       v-else
-      v-for="(item, index) of state.commentList"
+      v-for="item of state.commentList"
       :key="item.createdAt.seconds"
       class="w-10/12 mx-auto py-4 border-b-2 border-gray-400 text-gray-400"
     >
-      <div class="flex justify-between items-center">
+      <div class="flex justify-start items-center">
         <div>
           <span class="text-gray-700 font-semibold">{{ item.name }}</span>
           <span class="ml-6">{{ item.postingtime }}</span>
-        </div>
-        <div class="flex justify-center items-center mr-8">
-          <span
-            class="material-icons cursor-pointer"
-            :class="{ 'text-red-400': item.likesStatus }"
-            @click="likeComment(index, item.docID)"
-          >
-            favorite_border
-          </span>
-          <span>
-            {{ item.likesNum == 0 ? "" : item.likesNum }}
-          </span>
         </div>
       </div>
       <div class="text-gray-700">{{ item.content }}</div>
@@ -106,15 +94,11 @@ export default {
       await emit("addComment", commentInput.value);
       commentInput.value = "";
     };
-    const likeComment = (index, docID) => {
-      emit("updateCommentLike", index, docID);
-    };
     const store = useStore();
     const userPhoto = computed(() => store.state.userPhoto);
     return {
       commentInput,
       addComment,
-      likeComment,
       userPhoto,
     };
   },
