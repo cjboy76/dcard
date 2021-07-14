@@ -34,7 +34,7 @@
           </article>
           <!-- if articles exits -->
           <article
-            @click="routerPush(item.key, item.docID)"
+            @click="routerPush(item.boardKey, item.docID)"
             v-else
             v-for="item in state.artList"
             :key="item.docID"

@@ -20,15 +20,6 @@
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
       <div class="py-6 col-start-2 col-end-8">
         <label class="text-gray-400"
-          >身份<span class="ml-2 text-gray-800">
-            {{ user.identity }}
-          </span></label
-        >
-      </div>
-    </div>
-    <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
-      <div class="py-6 col-start-2 col-end-8">
-        <label class="text-gray-400"
           >出生日期<span class="ml-2 text-gray-800">
             {{ user.birth }}
           </span></label
@@ -93,37 +84,6 @@
           >
             <option>男生</option>
             <option>女生</option>
-            <option>其他</option>
-          </vee-field>
-        </label>
-      </div>
-      <div class="py-6 border-b border-gray-400 grid grid-cols-8">
-        <label
-          class="
-            text-gray-400
-            col-start-2 col-end-8
-            text-center
-            flex flex-col
-            md:text-left md:block
-          "
-          >身份
-          <vee-field
-            as="select"
-            name="identity"
-            class="ml-2 text-gray-700 focus:outline-none"
-          >
-            <option>帥哥</option>
-            <option>正妹</option>
-            <option>網紅</option>
-            <option>創作者</option>
-            <option>人類</option>
-            <option>學生</option>
-            <option>大叔</option>
-            <option>阿姨</option>
-            <option>老爺爺</option>
-            <option>老奶奶</option>
-            <option>總統</option>
-            <option>總裁</option>
           </vee-field>
         </label>
       </div>
@@ -197,7 +157,6 @@ export default {
     const schema_profile = {
       name: "required",
       gender: "required",
-      identity: "required",
       birth: "required",
     };
     const update = async (values) => {

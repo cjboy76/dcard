@@ -187,12 +187,14 @@
             <div
               class="
                 col-start-2 col-end-10
-                grid grid-cols-10
+                flex
+                justify-end
+                items-center
                 py-5
                 lg:bg-gray-100 lg:mx-2
               "
             >
-              <div class="col-start-7 col-end-10">
+              <div class="lg:mr-20">
                 <router-link
                   :to="{ name: 'Home' }"
                   class="rounded-md py-2 px-4 mr-4 font-bold"
@@ -299,18 +301,23 @@ export default {
     };
     //review
     const reviewArea = ref(null);
+    let url = "";
     const submit = async () => {
       NProgress.start();
       submissionAllow.value = true;
-      const userImagesRef = storageRef.child(
-        `userArticlesImage/${auth.currentUser.uid}/${postForm.images.name}`
-      );
-      const { task } = await userImagesRef.put(postForm.images);
-      const url = await task.snapshot.ref.getDownloadURL();
+      if (postForm.images) {
+        const userImagesRef = storageRef.child(
+          `userArticlesImage/${auth.currentUser.uid}/${
+            postForm.images.name ? postForm.images.name : ""
+          }`
+        );
+        const { task } = await userImagesRef.put(postForm.images);
+        url = await task.snapshot.ref.getDownloadURL();
+      }
+
       try {
         state.user = await store.dispatch("getData");
-        console.log(state);
-        await articlesCollection
+        const task = await articlesCollection
           .doc(auth.currentUser.uid)
           .collection("userArticles")
           .add({
@@ -321,10 +328,20 @@ export default {
             text: postForm.text,
             imagesURL: url,
             createdAt: timeStamp(),
+            postingTime: currentTime.value,
             comments: 0,
             likes: 0,
             author: state.user,
+            likesStatus: false,
           });
+        await articlesCollection
+          .doc(auth.currentUser.uid)
+          .collection("userArticles")
+          .doc(task.id)
+          .update({
+            docID: task.id,
+          });
+        console.log(task);
       } catch (error) {
         console.log(error);
         submissionAllow.value = false;

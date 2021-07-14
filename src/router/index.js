@@ -14,12 +14,18 @@ const routes = [
     name: "Articleforum",
     component: () =>
       import(/* webpackChunkName: "Article" */ "../views/Articleforum.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/:boardKey/a/:aID",
     name: "Article",
     component: () =>
       import(/* webpackChunkName: "Article" */ "../views/Article.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/all",

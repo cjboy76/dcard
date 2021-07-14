@@ -5,6 +5,7 @@ export default createStore({
   state: {
     authModalShow: false,
     userLoggedIn: false,
+    userPhoto: "",
     boardList: [
       { name: "心情", emoji: "emoji_emotions", key: "emotion" },
       { name: "感情", emoji: "volunteer_activism", key: "relationship" },
@@ -26,6 +27,9 @@ export default createStore({
     },
     toggleAuth(state) {
       state.userLoggedIn = !state.userLoggedIn;
+    },
+    setPhoto(state, payload) {
+      state.userPhoto = payload;
     },
   },
   actions: {
@@ -64,8 +68,9 @@ export default createStore({
         commit("toggleAuth");
       }
     },
-    async getData() {
+    async getData({ commit }) {
       const userRef = await usersCollection.doc(auth.currentUser.uid).get();
+      commit("setPhoto", userRef.data().profileImageURL);
       return {
         ...userRef.data(),
       };

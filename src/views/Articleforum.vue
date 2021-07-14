@@ -4,7 +4,7 @@
   >
     <app-mainsidebar />
     <div class="col-span-3 bg-gray-100 mt-10 sm:rounded-t lg:rounded-xl">
-      <div class="w-10/12 mx-auto mt-5">
+      <div class="w-10/12 mx-auto mt-5 pt-5 lg:pt-0">
         <span class="font-bold text-3xl">
           {{ title.name }}
         </span>
@@ -13,7 +13,7 @@
       <div class="sticky top-16 bg-gray-100" v-if="defaultDisplay">
         <div class="container">
           <div class="flex border-b-2 pt-5 lg:pt-5 px-10"></div>
-          <div class="flex justify-center items-center mt-10">
+          <div class="flex justify-center items-center py-10">
             <span class="text-2xl"> 目前看板還沒有貼文哦~ </span>
           </div>
         </div>
@@ -50,6 +50,8 @@
             w-10/12
             mx-auto
             grid grid-cols-3
+            justify-center
+            items-center
             py-2
             border-b-2
             cursor-pointer
@@ -61,7 +63,7 @@
             </div>
             <h2 class="font-bold text-lg">{{ item.title }}</h2>
             <p>
-              {{ item.content }}
+              {{ item.text }}
             </p>
             <div class="flex py-2">
               <span class="material-icons"> insert_comment </span>
@@ -80,9 +82,10 @@
               flex
               justify-center
               items-center
+              mx-auto
             "
           >
-            <img :src="item.imagesURL" alt="" class="max-w-sm" />
+            <img :src="item.imagesURL" class="max-w-sm" />
           </div>
         </article>
       </div>
@@ -128,7 +131,6 @@ export default {
       await snapshots.forEach((item) => {
         state.articleList.push({
           ...item.data(),
-          docID: item.id,
         });
       });
     };
