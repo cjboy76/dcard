@@ -64,6 +64,10 @@
             <div class="my-6 flex items-center">
               <span class="material-icons ml-2"> insert_comment </span>
               <span>{{ state.commentList.length }}</span>
+              <span class="material-icons ml-2 cursor-pointer">
+                favorite_border
+              </span>
+              <div class="span">10</div>
             </div>
           </article>
         </div>
@@ -100,7 +104,6 @@ export default {
       article: {},
       commentList: [],
     });
-    // const likesStatus = ref(false);
     const borderColor = ref("border-gray-700");
     const initial = async () => {
       const list = [];
@@ -119,7 +122,6 @@ export default {
       }
     };
     initial();
-
     // comment part
     const commentRef = db
       .collection("comments")
@@ -128,10 +130,22 @@ export default {
     const submission = ref(false);
     const getComment = async () => {
       const list = [];
-      const snapshots = await commentRef
-        .orderBy("createdAt", "desc")
-        .limit(10)
-        .get();
+      let snapshots;
+      if (state.commentList.length) {
+        const lastOne = await commentRef
+          .doc(state.commentList[state.commentList.length - 1].docID)
+          .get();
+        snapshots = await commentRef
+          .orderBy("createdAt", "desc")
+          .startAfter(lastOne)
+          .limit(10)
+          .get();
+      } else {
+        snapshots = await commentRef
+          .orderBy("createdAt", "desc")
+          .limit(10)
+          .get();
+      }
       snapshots.forEach((doc) => {
         list.push({
           ...doc.data(),
@@ -180,7 +194,7 @@ export default {
         .collectionGroup("userArticles")
         .where("docID", "==", route.params.aID)
         .get();
-
+      // article comment 數量
       await Promise.all(
         articleSnapshot.docs.map(async (snapshot) => {
           await snapshot.ref.update({

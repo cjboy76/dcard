@@ -332,7 +332,6 @@ export default {
             comments: 0,
             likes: 0,
             author: state.user,
-            likesStatus: false,
           });
         await articlesCollection
           .doc(auth.currentUser.uid)
