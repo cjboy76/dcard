@@ -92,7 +92,7 @@
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
 import AppArticlecomment from "@/components/Articlecomment.vue";
-import { auth, timeStamp, db, commentsCollection } from "@/includes/firebase";
+import { auth, timeStamp, db } from "@/includes/firebase";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { reactive, ref, computed } from "@vue/reactivity";
 
@@ -139,12 +139,14 @@ export default {
     };
 
     // comment part
+    const commentRef = db
+      .collection("comments")
+      .doc(route.params.aID)
+      .collection("commentList");
     const submission = ref(false);
     const getComment = async () => {
       const list = [];
-      const snapshots = await commentsCollection
-        .doc(route.params.aID)
-        .collection("commentList")
+      const snapshots = await commentRef
         .orderBy("createdAt", "desc")
         .limit(10)
         .get();
@@ -173,18 +175,15 @@ export default {
       submission.value = true;
       if (!value) return;
       try {
-        await commentsCollection
-          .doc(route.params.aID)
-          .collection("commentList")
-          .add({
-            postingtime: currentTime.value,
-            content: value,
-            name: auth.currentUser.displayName,
-            createdAt: timeStamp(),
-            likesNum: 0,
-            likesStatus: false,
-            articleID: route.params.aID,
-          });
+        await commentRef.add({
+          postingtime: currentTime.value,
+          content: value,
+          name: auth.currentUser.displayName,
+          createdAt: timeStamp(),
+          likesNum: 0,
+          likesStatus: false,
+          articleID: route.params.aID,
+        });
       } catch (error) {
         submission.value = false;
         alert("留言失敗，請稍後再嘗試");
@@ -227,14 +226,10 @@ export default {
 
       await Promise.all(
         likeList.value.map(async (item) => {
-          await commentsCollection
-            .doc(route.params.aID)
-            .collection("commentList")
-            .doc(item.id)
-            .update({
-              likesStatus: state.commentList[item.i].likesStatus,
-              likesNum: state.commentList[item.i].likesNum,
-            });
+          await commentRef.doc(item.id).update({
+            likesStatus: state.commentList[item.i].likesStatus,
+            likesNum: state.commentList[item.i].likesNum,
+          });
         })
       );
       next();
