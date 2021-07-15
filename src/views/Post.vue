@@ -236,7 +236,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { storage, auth, timeStamp } from "../includes/firebase";
-import { articlesCollection } from "@/includes/firebase";
+import { articlesCollection, db } from "@/includes/firebase";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
@@ -289,7 +289,15 @@ export default {
       editArea.value.appendChild(img);
     };
     const showingWarning = ref(false);
-    const nextStep = () => {
+    const boardNumber = ref(null);
+    const nextStep = async () => {
+      // 取得看板貼文數
+      let snapshot = await db
+        .collection("boardList")
+        .doc(postForm.board.key)
+        .get();
+      boardNumber.value = snapshot.data().count;
+      // 判斷貼文有沒有完成
       if (!editArea.value.innerHTML || !postForm.title || !postForm.board) {
         showingWarning.value = true;
         return;
@@ -305,6 +313,7 @@ export default {
     const submit = async () => {
       NProgress.start();
       submissionAllow.value = true;
+      boardNumber.value = boardNumber.value += 1;
       if (postForm.images) {
         const userImagesRef = storageRef.child(
           `userArticlesImage/${auth.currentUser.uid}/${
@@ -314,33 +323,34 @@ export default {
         const { task } = await userImagesRef.put(postForm.images);
         url = await task.snapshot.ref.getDownloadURL();
       }
-
       try {
+        // 更新看板貼文數量
+        await db
+          .collection("boardList")
+          .doc(postForm.board.key)
+          .update({ count: boardNumber.value });
+        // 取使用者資料
         state.user = await store.dispatch("getData");
-        const task = await articlesCollection
-          .doc(auth.currentUser.uid)
-          .collection("userArticles")
-          .add({
-            boardName: postForm.board.name,
-            boardKey: postForm.board.key,
-            title: postForm.title,
-            content: postForm.content,
-            text: postForm.text,
-            imagesURL: url,
-            createdAt: timeStamp(),
-            postingTime: currentTime.value,
-            comments: 0,
-            likes: 0,
-            author: state.user,
-          });
-        await articlesCollection
-          .doc(auth.currentUser.uid)
-          .collection("userArticles")
-          .doc(task.id)
-          .update({
-            docID: task.id,
-          });
-        console.log(task);
+        // 上傳貼文
+        const task = await articlesCollection.add({
+          boardName: postForm.board.name,
+          boardKey: postForm.board.key,
+          title: postForm.title,
+          content: postForm.content,
+          text: postForm.text,
+          imagesURL: url,
+          createdAt: timeStamp(),
+          postingTime: currentTime.value,
+          comments: 0,
+          likes: 0,
+          covid: "19",
+          author: state.user,
+          uID: auth.currentUser.uid,
+        });
+        // 資料庫加入貼文 id
+        await articlesCollection.doc(task.id).update({
+          docID: task.id,
+        });
       } catch (error) {
         console.log(error);
         submissionAllow.value = false;

@@ -87,9 +87,10 @@
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
 import AppArticlecomment from "@/components/Articlecomment.vue";
-import { auth, timeStamp, db } from "@/includes/firebase";
+import { auth, timeStamp, db, articlesCollection } from "@/includes/firebase";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { reactive, ref, computed } from "@vue/reactivity";
+import { onBeforeUnmount, onBeforeMount } from "@vue/runtime-core";
 
 export default {
   components: {
@@ -107,8 +108,7 @@ export default {
     const borderColor = ref("border-gray-700");
     const initial = async () => {
       const list = [];
-      const articleSnapshot = await db
-        .collectionGroup("userArticles")
+      const articleSnapshot = await articlesCollection
         .where("docID", "==", route.params.aID)
         .get();
       articleSnapshot.forEach((doc) => {
@@ -128,8 +128,29 @@ export default {
       .doc(route.params.aID)
       .collection("commentList");
     const submission = ref(false);
+    // 計算畫面觸底觸發 getComment()
+    const scrollHandler = () => {
+      const { scrollTop, offsetHeight } = document.documentElement;
+      const { innerHeight } = window;
+      const bottomOfWindow =
+        Math.round(scrollTop) + innerHeight === offsetHeight;
+      if (bottomOfWindow) {
+        console.log("reaching bottom!!");
+      }
+    };
+    onBeforeMount(() => {
+      window.addEventListener("scroll", scrollHandler);
+    });
+    onBeforeUnmount(() => {
+      window.removeEventListener("scroll", scrollHandler);
+    });
+    // 避免重複觸發 request
+    const pendingRequest = ref(false);
     const getComment = async () => {
-      const list = [];
+      if (pendingRequest.value) {
+        return;
+      }
+      pendingRequest.value = true;
       let snapshots;
       if (state.commentList.length) {
         const lastOne = await commentRef
@@ -147,15 +168,14 @@ export default {
           .get();
       }
       snapshots.forEach((doc) => {
-        list.push({
+        state.commentList.push({
           ...doc.data(),
           docID: doc.id,
         });
       });
-      state.commentList = list;
+      pendingRequest.value = false;
     };
     getComment();
-
     const currentTime = computed(() => {
       let time = new Date();
       let month = time.getMonth() + 1;
@@ -190,8 +210,7 @@ export default {
     };
     // before leaving && upload data
     onBeforeRouteLeave(async (to, from, next) => {
-      const articleSnapshot = await db
-        .collectionGroup("userArticles")
+      const articleSnapshot = await articlesCollection
         .where("docID", "==", route.params.aID)
         .get();
       // article comment 數量

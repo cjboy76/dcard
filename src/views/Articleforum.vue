@@ -3,7 +3,9 @@
     class="home container mx-auto mt-8 lg:grid lg:grid-cols-5 lg:gap-4 lg:mt-4"
   >
     <app-mainsidebar />
-    <div class="col-span-3 bg-gray-100 mt-10 sm:rounded-t lg:rounded-xl">
+    <div
+      class="col-span-3 bg-gray-100 mt-10 lg:mt-0 sm:rounded-t lg:rounded-xl"
+    >
       <div class="w-10/12 mx-auto mt-5 pt-5 lg:pt-0">
         <span class="font-bold text-3xl">
           {{ title.name }}
@@ -43,7 +45,7 @@
       </div>
       <div class="container">
         <article
-          @click="routerPush(item.key, item.docID)"
+          @click="routerPush(item.boardKey, item.docID)"
           v-for="item of state.articleList"
           :key="item.docID"
           class="
@@ -98,7 +100,7 @@ import AppMainprofile from "@/components/Mainprofile.vue";
 import { computed, reactive, ref } from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { db } from "@/includes/firebase";
+import { articlesCollection } from "@/includes/firebase";
 
 export default {
   components: {
@@ -119,10 +121,11 @@ export default {
       })
     );
     const defaultDisplay = ref(true);
+    // const tab = ref("comments");
     // initializing get data
     const getArticles = async () => {
-      const snapshots = await db
-        .collectionGroup("userArticles")
+      const snapshots = await articlesCollection
+        .orderBy("comments", "desc")
         .where("boardKey", "==", route.params.boardKey)
         .get();
       if (!snapshots.empty) defaultDisplay.value = false;

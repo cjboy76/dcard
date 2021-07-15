@@ -71,6 +71,7 @@
                 class="
                   w-24
                   h-24
+                  rounded-lg
                   overflow-hidden
                   flex
                   justify-center
@@ -107,8 +108,7 @@ export default {
     const defaultDisplay = ref(true);
     const getOwnArticles = async () => {
       const snapshot = await articlesCollection
-        .doc(auth.currentUser.uid)
-        .collection("userArticles")
+        .where("uID", "==", auth.currentUser.uid)
         .get();
       if (!snapshot.empty) defaultDisplay.value = false;
       let targetList = [];

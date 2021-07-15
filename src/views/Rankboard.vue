@@ -38,8 +38,20 @@
           "
         >
           <span class="ml-2">{{ index + 1 }}</span>
-          <div class="rounded-full overflow-hidden ml-3">
-            <img src="https://picsum.photos/60/60?random=1" alt="" />
+          <div
+            class="
+              w-12
+              h-12
+              rounded-full
+              overflow-hidden
+              ml-3
+              flex
+              justify-center
+              items-center
+              bg-gray-100
+            "
+          >
+            <img :src="item.image" class="max-w-xs w-16" alt="看板圖片" />
           </div>
           <h2 class="ml-3">{{ item.name }}</h2>
         </article>
@@ -52,9 +64,9 @@
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
-import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { computed } from "@vue/runtime-core";
+import { db } from "../includes/firebase";
+import { ref } from "@vue/reactivity";
 
 export default {
   name: "Favcomment",
@@ -63,14 +75,26 @@ export default {
     AppMainprofile,
   },
   setup() {
-    const store = useStore();
     const router = useRouter();
     const routerPush = (value) => {
       router.push({ name: "Articleforum", params: { boardKey: value } });
     };
+    const boardList = ref([]);
+    const initial = async () => {
+      const list = [];
+      const snapshots = await db
+        .collection("boardList")
+        .orderBy("count", "desc")
+        .get();
+      snapshots.forEach((document) => {
+        list.push(document.data());
+      });
+      boardList.value = list;
+    };
+    initial();
     return {
-      boardList: computed(() => store.state.boardList),
       routerPush,
+      boardList,
     };
   },
 };
