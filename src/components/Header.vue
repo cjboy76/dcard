@@ -136,7 +136,7 @@
             class="burgerLink cursor-pointer md:py-4 py-4"
             :to="{ name: 'Favarticles' }"
           >
-            <span>喜愛文章</span>
+            <span>收藏文章</span>
           </router-link>
           <div
             class="burgerLink cursor-pointer md:py-4 py-4"

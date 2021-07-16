@@ -18,7 +18,7 @@
           bg-gray-100
         "
       >
-        <h1>喜愛文章</h1>
+        <h1>收藏文章</h1>
       </div>
       <!-- article -->
       <div class="container pb-8">

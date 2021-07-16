@@ -52,7 +52,7 @@
           </p>
           <div class="comments flex py-2">
             <span class="material-icons"> insert_comment </span>
-            <div class="span">{{ item.comments }}</div>
+            <div class="span ml-1">{{ item.comments }}</div>
           </div>
         </div>
         <div class="article-image col-span-1 grid justify-center items-center">

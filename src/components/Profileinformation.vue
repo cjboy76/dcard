@@ -35,6 +35,7 @@ export default {
     getInformation();
     const updateInformation = async (values) => {
       await store.dispatch("updateData", values);
+      getInformation();
     };
     return {
       getInformation,

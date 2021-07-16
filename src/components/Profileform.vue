@@ -3,11 +3,12 @@
   <div v-if="!toggleProfile">
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
       <div class="py-6 col-start-2 col-end-8">
-        <label class="text-gray-400"
-          >姓名<span class="ml-2 text-gray-800">
+        <label class="text-gray-400">
+          名稱
+          <span class="ml-2 text-gray-800">
             {{ user.name }}
-          </span></label
-        >
+          </span>
+        </label>
       </div>
     </div>
     <div class="border-b border-gray-400 mx-8 grid grid-cols-8">
@@ -53,18 +54,10 @@
       <div class="py-6 border-b border-gray-400 grid grid-cols-8">
         <label
           class="text-gray-400 col-start-2 col-end-8 text-center md:text-left"
-          >姓名
-          <vee-field
-            type="text"
-            name="name"
-            class="
-              ml-2
-              text-gray-700
-              focus:outline-none
-              text-center
-              md:text-left
-            "
-          />
+          >名稱
+          <span class="ml-2 text-gray-800">
+            {{ user.name }}
+          </span>
         </label>
       </div>
       <div class="py-6 border-b border-gray-400 grid grid-cols-8">
@@ -155,14 +148,12 @@ export default {
     const toggleProfile = ref(false);
     const showingSpinner = ref(false);
     const schema_profile = {
-      name: "required",
       gender: "required",
       birth: "required",
     };
     const update = async (values) => {
       showingSpinner.value = true;
       await emit("updateData", values);
-      await emit("getData");
       showingSpinner.value = false;
       toggleProfile.value = false;
     };

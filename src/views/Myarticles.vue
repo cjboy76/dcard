@@ -60,8 +60,6 @@
               <div class="comments flex py-2">
                 <span class="material-icons"> insert_comment </span>
                 <div class="span">{{ item.comments }}</div>
-                <span class="material-icons ml-2"> favorite_border </span>
-                <div class="span">{{ item.likes }}</div>
               </div>
             </div>
             <div

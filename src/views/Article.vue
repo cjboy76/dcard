@@ -50,7 +50,8 @@
           </div>
           <!-- article -->
           <article>
-            <div class="my-4">
+            <div class="text-3xl font-bold">{{ state.article.title }}</div>
+            <div class="mb-3">
               <h1 class="text-3xl font-semibold">{{ state.article.titie }}</h1>
               <span class="text-green-600">{{ state.article.boardName }}</span>
               <span class="text-gray-400 ml-2">
@@ -62,12 +63,21 @@
             </div>
             <!-- comments number -->
             <div class="my-6 flex items-center">
-              <span class="material-icons ml-2"> insert_comment </span>
-              <span>{{ state.commentList.length }}</span>
-              <span class="material-icons ml-2 cursor-pointer">
-                favorite_border
+              <span class="material-icons ml-2 text-gray-700">
+                insert_comment
               </span>
-              <div class="span">10</div>
+              <span class="ml-1">{{ state.commentList.length }}</span>
+              <span
+                class="
+                  material-icons
+                  ml-2
+                  cursor-pointer
+                  text-gray-700
+                  hover:text-gray-400
+                "
+              >
+                bookmark
+              </span>
             </div>
           </article>
         </div>

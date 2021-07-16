@@ -32,12 +32,18 @@ const routes = [
     name: "Allboard",
     component: () =>
       import(/* webpackChunkName: "Allboard" */ "../views/Allboard.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/rk",
     name: "Rankboard",
     component: () =>
       import(/* webpackChunkName: "Rankboard" */ "../views/Rankboard.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/profile",
@@ -95,6 +101,7 @@ router.beforeEach((to, from, next) => {
   if (store.state.userLoggedIn) {
     next();
   } else {
+    store.state.authModalShow = true;
     next({ name: "Home" });
   }
 });

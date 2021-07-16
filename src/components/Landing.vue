@@ -60,7 +60,9 @@
           @submit="register"
         >
           <label class="my-2"
-            >姓名<vee-field
+            >名稱
+            <vee-field
+              @focus="showAlert = true"
               type="text"
               name="name"
               class="
@@ -70,8 +72,15 @@
                 ml-1
                 border-b-2 border-gray-300
               "
-          /></label>
+            />
+          </label>
           <ErrorMessage class="text-red-600" name="name" />
+          <div
+            class="text-center text-xs text-red-600"
+            v-show="showAlert == true"
+          >
+            (註冊後就不可更改囉)
+          </div>
 
           <label class="my-2"
             >email<vee-field
@@ -279,6 +288,7 @@ export default {
       showing.showingMessage = "歡迎";
       window.location.reload();
     };
+    const showAlert = ref(false);
     return {
       showing,
       currentTab,
@@ -286,6 +296,7 @@ export default {
       schemaLogin,
       register,
       login,
+      showAlert,
     };
   },
   computed: {

@@ -47,7 +47,7 @@
             </p>
             <div class="flex py-2">
               <span class="material-icons"> insert_comment </span>
-              <div class="span">{{ item.comments }}</div>
+              <div class="span ml-1">{{ item.comments }}</div>
             </div>
           </div>
           <div

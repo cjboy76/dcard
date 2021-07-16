@@ -102,7 +102,7 @@
         >
           <span class="material-icons"> favorite </span>
 
-          <div class="ml-2">喜愛文章</div>
+          <div class="ml-2">收藏文章</div>
         </div>
       </router-link>
     </div>
