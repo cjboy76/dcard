@@ -23,7 +23,7 @@
           </button>
           <button
             @click="switchHandler(false)"
-            class="tab-2 px-6 leading-10 relative cursor-pointer text-gray-400"
+            class="tab-2 px-6 leading-10 relative cursor-pointer"
             :class="{ 'text-gray-400': tab == 'comments' }"
           >
             最新
@@ -33,7 +33,11 @@
     </div>
     <!-- articles -->
     <div class="container pb-8">
-      <article
+      <router-link
+        :to="{
+          name: 'Article',
+          params: { boardKey: item.boardKey, aID: item.docID },
+        }"
         v-for="item of state.primitive"
         :key="item.docID"
         class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2"
@@ -70,7 +74,7 @@
             />
           </div>
         </div>
-      </article>
+      </router-link>
     </div>
   </div>
 </template>

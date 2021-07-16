@@ -6,10 +6,10 @@
     <div
       class="col-span-3 bg-gray-100 mt-10 lg:mt-0 sm:rounded-t lg:rounded-xl"
     >
-      <div class="w-10/12 mx-auto mt-5 pt-5 lg:pt-0">
-        <span class="font-bold text-3xl">
+      <div class="w-10/12 mx-auto mt-5 pt-5 lg:pt-0 border-b-2 border-gray-400">
+        <div class="font-bold text-3xl my-2">
           {{ title.name }}
-        </span>
+        </div>
       </div>
       <!-- default with no articles -->
       <div class="sticky top-16 bg-gray-100" v-if="defaultDisplay">
@@ -21,28 +21,6 @@
         </div>
       </div>
       <!-- if articles exits -->
-      <div class="sticky top-16 bg-gray-100 rounded-t-xl" v-else>
-        <div class="container main-tab">
-          <div class="flex border-b-2 pt-5 lg:pt-3 px-10">
-            <button class="tab-1 px-6 leading-10 relative cursor-pointer group">
-              熱門
-            </button>
-            <button
-              class="
-                tab-2
-                px-6
-                leading-10
-                relative
-                cursor-pointer
-                group
-                text-gray-400
-              "
-            >
-              最新
-            </button>
-          </div>
-        </div>
-      </div>
       <div class="container">
         <article
           @click="routerPush(item.boardKey, item.docID)"
@@ -97,7 +75,13 @@
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
-import { computed, reactive, ref } from "@vue/runtime-core";
+import {
+  computed,
+  reactive,
+  ref,
+  onBeforeMount,
+  onBeforeUnmount,
+} from "@vue/runtime-core";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { articlesCollection } from "@/includes/firebase";
@@ -121,15 +105,47 @@ export default {
       })
     );
     const defaultDisplay = ref(true);
-    // const tab = ref("comments");
-    // initializing get data
+    // 計算捲軸觸底觸發 getComment()
+    const scrollHandler = () => {
+      const { scrollTop, offsetHeight } = document.documentElement;
+      const { innerHeight } = window;
+      const bottomOfWindow =
+        Math.round(scrollTop) + innerHeight === offsetHeight;
+      if (bottomOfWindow) {
+        getArticles();
+      }
+    };
+    onBeforeMount(() => {
+      window.addEventListener("scroll", scrollHandler);
+    });
+    onBeforeUnmount(() => {
+      window.removeEventListener("scroll", scrollHandler);
+    });
+    // 避免重複 request
+    const pendingRequest = ref(false);
     const getArticles = async () => {
-      const snapshots = await articlesCollection
-        .orderBy("comments", "desc")
-        .where("boardKey", "==", route.params.boardKey)
-        .get();
+      if (pendingRequest.value) {
+        return;
+      }
+      pendingRequest.value = true;
+      let snapshots;
+      if (state.articleList.length) {
+        const lastOne = await articlesCollection
+          .doc(state.articleList[state.articleList.length - 1].docID)
+          .get();
+        snapshots = await articlesCollection
+          .where("boardKey", "==", route.params.boardKey)
+          .startAfter(lastOne)
+          .limit(30)
+          .get();
+      } else {
+        snapshots = await articlesCollection
+          .where("boardKey", "==", route.params.boardKey)
+          .limit(30)
+          .get();
+      }
       if (!snapshots.empty) defaultDisplay.value = false;
-      await snapshots.forEach((item) => {
+      snapshots.forEach((item) => {
         state.articleList.push({
           ...item.data(),
         });

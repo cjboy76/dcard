@@ -128,14 +128,14 @@ export default {
       .doc(route.params.aID)
       .collection("commentList");
     const submission = ref(false);
-    // 計算畫面觸底觸發 getComment()
+    // 計算捲軸觸底觸發 getComment()
     const scrollHandler = () => {
       const { scrollTop, offsetHeight } = document.documentElement;
       const { innerHeight } = window;
       const bottomOfWindow =
         Math.round(scrollTop) + innerHeight === offsetHeight;
       if (bottomOfWindow) {
-        console.log("reaching bottom!!");
+        getComment();
       }
     };
     onBeforeMount(() => {
@@ -144,7 +144,7 @@ export default {
     onBeforeUnmount(() => {
       window.removeEventListener("scroll", scrollHandler);
     });
-    // 避免重複觸發 request
+    // 避免重複 request
     const pendingRequest = ref(false);
     const getComment = async () => {
       if (pendingRequest.value) {
