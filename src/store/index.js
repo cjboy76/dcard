@@ -153,6 +153,7 @@ export default createStore({
           await articlesCollection.doc(item.data().docID).update({
             profileImageURL: payload.profileImageURL,
             fileName: payload.fileName,
+            authorGender: payload.gender,
           });
         })
       );
