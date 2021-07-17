@@ -140,7 +140,13 @@ export default createStore({
     async updateData(context, payload) {
       // 更新使用者資料
       try {
-        await usersCollection.doc(auth.currentUser.uid).update(payload);
+        if (payload.type == "image") {
+          await usersCollection.doc(auth.currentUser.uid).update(payload);
+        } else {
+          await usersCollection.doc(auth.currentUser.uid).update({
+            gender: payload.values.gender,
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -150,16 +156,13 @@ export default createStore({
         .get();
       await Promise.all(
         snapshots.docs.map(async (item) => {
-          if (payload.type) {
-            await articlesCollection.doc(item.data().docID).update({
-              profileImageURL: payload.profileImageURL,
-              fileName: payload.fileName,
-            });
-          } else {
-            await articlesCollection.doc(item.data().docID).update({
-              authorGender: payload.gender,
-            });
+          if (payload.type == "image") {
+            await articlesCollection.doc(item.data().docID).update(payload);
+            return;
           }
+          await articlesCollection.doc(item.data().docID).update({
+            authorGender: payload.values.gender,
+          });
         })
       );
     },

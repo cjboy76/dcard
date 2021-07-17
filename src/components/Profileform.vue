@@ -153,7 +153,7 @@ export default {
     };
     const update = async (values) => {
       showingSpinner.value = true;
-      await emit("updateData", values);
+      await emit("updateData", { values, type: "form" });
       showingSpinner.value = false;
       toggleProfile.value = false;
       // window.location.reload();
