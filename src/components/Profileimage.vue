@@ -63,7 +63,11 @@ export default {
       );
       const { task } = await userProfileImageRef.put(file);
       const url = await task.snapshot.ref.getDownloadURL();
-      await emit("updateData", { profileImageURL: url, fileName: file.name });
+      await emit("updateData", {
+        profileImageURL: url,
+        fileName: file.name,
+        type: "image",
+      });
       newURL.value = url;
     };
     return {

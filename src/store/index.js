@@ -150,11 +150,16 @@ export default createStore({
         .get();
       await Promise.all(
         snapshots.docs.map(async (item) => {
-          await articlesCollection.doc(item.data().docID).update({
-            profileImageURL: payload.profileImageURL,
-            fileName: payload.fileName,
-            authorGender: payload.gender,
-          });
+          if (payload.type) {
+            await articlesCollection.doc(item.data().docID).update({
+              profileImageURL: payload.profileImageURL,
+              fileName: payload.fileName,
+            });
+          } else {
+            await articlesCollection.doc(item.data().docID).update({
+              authorGender: payload.gender,
+            });
+          }
         })
       );
     },
