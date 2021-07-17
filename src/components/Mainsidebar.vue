@@ -100,8 +100,7 @@
             hover:bg-green-800
           "
         >
-          <span class="material-icons"> favorite </span>
-
+          <span class="material-icons"> bookmark </span>
           <div class="ml-2">收藏文章</div>
         </div>
       </router-link>

@@ -22,191 +22,65 @@
       </div>
       <!-- article -->
       <div class="container pb-8">
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
+        <article
+          v-if="defaultDisplay"
+          class="
+            w-10/12
+            mx-auto
+            grid
+            justify-center
+            items-center
+            py-2
+            border-b-2
+          "
+        >
+          <span class="my-10 text-2xl">目前還沒有收藏文章喔～</span>
+        </article>
+        <router-link
+          :to="{
+            name: 'Article',
+            params: { boardKey: item.boardKey, aID: item.docID },
+          }"
+          v-else
+          v-for="item of primitive"
+          :key="item.docID"
+          class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2"
+        >
           <div class="article-text col-span-2 w-11/12 mx-auto">
             <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
+              <span>{{ item.boardName }}</span>
             </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
+            <h2 class="font-bold text-lg">{{ item.title }}</h2>
+            <p style="text-overflow: ellipsis">{{ item.text }}</p>
+            <div class="flex py-2">
               <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
+              <div class="span">{{ item.comments }}</div>
+              <span class="material-icons ml-1 text-gray-700 cursor-pointer">
+                favorite
+              </span>
+              <span>{{ item.likes }}</span>
             </div>
           </div>
           <div
             class="article-image col-span-1 grid justify-center items-center"
           >
-            <img src="https://picsum.photos/100/100?random=1" alt="" />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
+            <div
+              class="
+                h-24
+                w-24
+                rounded-xl
+                overflow-hidden
+                col-span-1
+                flex
+                justify-center
+                items-center
+                mx-auto
+              "
+            >
+              <img :src="item.imagesURL" class="max-w-sm w-40" />
             </div>
           </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
-            </div>
-          </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
-            </div>
-          </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
-            </div>
-          </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
-            </div>
-          </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
-        <article class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2">
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>心情</span>
-            </div>
-            <h2 class="font-bold text-lg">火鍋最不需要的兩樣東西</h2>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-              in quisquam quod est illo sequ...
-            </p>
-            <div class="comments flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span">10</div>
-              <span class="material-icons"> favorite_border </span>
-              <div class="span">10</div>
-            </div>
-          </div>
-          <div
-            class="article-image col-span-1 grid justify-center items-center"
-          >
-            <img
-              src="https://picsum.photos/100/100?random=1"
-              alt=""
-              class="rounded-lg overflow-hidden"
-            />
-          </div>
-        </article>
+        </router-link>
       </div>
     </div>
     <app-mainprofile />
@@ -216,12 +90,38 @@
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
+import { db, auth, articlesCollection } from "@/includes/firebase";
+import { ref } from "@vue/reactivity";
 
 export default {
   name: "Favcomment",
   components: {
     AppMainsidebar,
     AppMainprofile,
+  },
+  setup() {
+    const defaultDisplay = ref(true);
+    const favoriteList = ref([]);
+    const primitive = ref([]);
+    const initial = async () => {
+      const snapshots = await db
+        .collection("favoriteCol")
+        .doc(auth.currentUser.uid)
+        .get();
+      if (snapshots.exists) defaultDisplay.value = false;
+      favoriteList.value = [...snapshots.data().favoriteList];
+      await Promise.all(
+        favoriteList.value.map(async (item) => {
+          const target = await articlesCollection.doc(item).get();
+          primitive.value.push(target.data());
+        })
+      );
+    };
+    initial();
+    return {
+      primitive,
+      defaultDisplay,
+    };
   },
 };
 </script>

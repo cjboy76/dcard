@@ -14,7 +14,6 @@
       <!-- default with no articles -->
       <div class="sticky top-16 bg-gray-100" v-if="defaultDisplay">
         <div class="container">
-          <div class="flex border-b-2 pt-5 lg:pt-5 px-10"></div>
           <div class="flex justify-center items-center py-10">
             <span class="text-2xl"> 目前看板還沒有貼文哦~ </span>
           </div>
@@ -48,6 +47,10 @@
             <div class="flex py-2">
               <span class="material-icons"> insert_comment </span>
               <div class="span ml-1">{{ item.comments }}</div>
+              <span class="material-icons ml-1 text-gray-700 cursor-pointer">
+                favorite
+              </span>
+              <span>{{ item.likes }}</span>
             </div>
           </div>
           <div
@@ -63,7 +66,7 @@
               mx-auto
             "
           >
-            <img :src="item.imagesURL" class="max-w-sm" />
+            <img :src="item.imagesURL" class="max-w-sm w-40" />
           </div>
         </article>
       </div>

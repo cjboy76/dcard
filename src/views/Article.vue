@@ -52,13 +52,12 @@
           <article>
             <div class="text-3xl font-bold">{{ state.article.title }}</div>
             <div class="mb-3">
-              <h1 class="text-3xl font-semibold">{{ state.article.titie }}</h1>
               <span class="text-green-600">{{ state.article.boardName }}</span>
               <span class="text-gray-400 ml-2">
                 {{ state.article.postingTime }}
               </span>
             </div>
-            <div class="article overflow-y-scroll">
+            <div class="article overflow-y-scroll py-2">
               <div v-html="state.article.content"></div>
             </div>
             <!-- comments number -->
@@ -68,16 +67,39 @@
               </span>
               <span class="ml-1">{{ state.commentList.length }}</span>
               <span
-                class="
-                  material-icons
-                  ml-2
-                  cursor-pointer
-                  text-gray-700
-                  hover:text-gray-400
-                "
+                @click="addLike"
+                class="material-icons ml-1 text-gray-700 cursor-pointer"
+                :class="{ 'text-pink-500': likeStatus }"
+              >
+                favorite
+              </span>
+              <span>{{ likeCount }}</span>
+              <span
+                @click="addFavorite"
+                :class="{ 'text-green-600': favoriteStatus }"
+                class="material-icons ml-2 cursor-pointer text-gray-700"
               >
                 bookmark
               </span>
+              <div
+                class="flex justify-center items-center"
+                v-if="pendingSuccess"
+              >
+                <div
+                  class="flex justify-center items-center"
+                  v-show="pendingStatus == 'good'"
+                >
+                  <span class="material-icons text-green-600"> done </span>
+                  <span class="text-green-600">已加入收藏文章</span>
+                </div>
+                <div
+                  class="flex justify-center items-center"
+                  v-show="pendingStatus == 'bad'"
+                >
+                  <span class="material-icons text-green-600"> delete </span>
+                  <span class="text-green-600">已移除收藏文章</span>
+                </div>
+              </div>
             </div>
           </article>
         </div>
@@ -115,24 +137,103 @@ export default {
       article: {},
       commentList: [],
     });
+    const favoriteList = ref([]);
+    const likeList = ref([]);
+    const likeCount = ref(0);
     const borderColor = ref("border-gray-700");
     const initial = async () => {
-      const list = [];
+      // 拿取本文章資料
       const articleSnapshot = await articlesCollection
-        .where("docID", "==", route.params.aID)
+        .doc(route.params.aID)
         .get();
-      articleSnapshot.forEach((doc) => {
-        list.push({ ...doc.data() });
-      });
-      state.article = list[0];
+      // 收藏文章陣列
+      const favoriteSnapshot = await db
+        .collection("favoriteCol")
+        .doc(auth.currentUser.uid)
+        .get();
+      // 文章按讚數資料
+      const likeSnapshot = await db
+        .collection("likeCol")
+        .doc(route.params.aID)
+        .get();
+      // 存取文章資料
+      state.article = articleSnapshot.data();
+      // 如果存在收藏文章陣列 就 catch
+      if (favoriteSnapshot.exists) {
+        favoriteList.value = [...favoriteSnapshot.data().favoriteList];
+      }
+      // 如果存在按讚文章陣列 就 catch
+      if (likeSnapshot.exists) {
+        likeList.value = [...likeSnapshot.data().likeList];
+      }
+      // 用文章資料計算頭照邊框男女樣式
       if (state.article.author.gender) {
         state.article.author.gender == "男生"
           ? (borderColor.value = "border-blue-200")
           : (borderColor.value = "border-red-200");
       }
+      // 用文章資料計算文章按讚數
+      if (state.article.likes) {
+        likeCount.value = state.article.likes;
+      }
     };
     initial();
-    // comment part
+    // 按讚文章部分
+    const likeStatus = computed(() => {
+      const rule = (element) => element == auth.currentUser.uid;
+      if (likeList.value.some(rule)) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    const addLike = async () => {
+      if (likeStatus.value) {
+        likeCount.value += -1;
+        let index = likeList.value.indexOf(auth.currentUser.uid);
+        likeList.value.splice(index, 1);
+      } else {
+        likeCount.value += 1;
+        likeList.value.push(auth.currentUser.uid);
+      }
+      // 更新按讚數
+      await articlesCollection.doc(route.params.aID).update({
+        likes: likeCount.value,
+      });
+      // 更新按讚文章陣列
+      await db.collection("likeCol").doc(route.params.aID).set(
+        {
+          likeList: likeList.value,
+        },
+        { merge: true }
+      );
+    };
+    // 新增刪除收藏貼文
+    const pendingSuccess = ref(false);
+    const pendingStatus = ref("good");
+    const favoriteStatus = computed(() => {
+      const rule = (element) => element == route.params.aID;
+      return favoriteList.value.some(rule);
+    });
+    const addFavorite = () => {
+      pendingSuccess.value = true;
+      const rule = (element) => element == route.params.aID;
+      if (favoriteList.value.some(rule)) {
+        let index = favoriteList.value.indexOf(route.params.aID);
+        favoriteList.value.splice(index, 1);
+        pendingStatus.value = "bad";
+        setTimeout(() => {
+          pendingSuccess.value = false;
+        }, 1000);
+        return;
+      }
+      favoriteList.value.push(route.params.aID);
+      pendingStatus.value = "good";
+      setTimeout(() => {
+        pendingSuccess.value = false;
+      }, 1000);
+    };
+    // 留言部份
     const commentRef = db
       .collection("comments")
       .doc(route.params.aID)
@@ -220,17 +321,14 @@ export default {
     };
     // before leaving && upload data
     onBeforeRouteLeave(async (to, from, next) => {
-      const articleSnapshot = await articlesCollection
-        .where("docID", "==", route.params.aID)
-        .get();
-      // article comment 數量
-      await Promise.all(
-        articleSnapshot.docs.map(async (snapshot) => {
-          await snapshot.ref.update({
-            comments: state.commentList.length,
-          });
-        })
-      );
+      // 更新文章 comments 數量
+      await articlesCollection.doc(route.params.aID).update({
+        comments: state.commentList.length,
+      });
+      // 更新收藏文章
+      await db.collection("favoriteCol").doc(auth.currentUser.uid).set({
+        favoriteList: favoriteList.value,
+      });
       next();
     });
 
@@ -239,6 +337,13 @@ export default {
       borderColor,
       submission,
       addComment,
+      addFavorite,
+      pendingSuccess,
+      pendingStatus,
+      favoriteStatus,
+      likeStatus,
+      addLike,
+      likeCount,
     };
   },
 };

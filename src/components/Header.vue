@@ -26,7 +26,7 @@
         </router-link>
         <!-- search-bar -->
         <div class="ml-4 w-5/6 hidden lg:block">
-          <form class="flex justify-start items-center">
+          <!-- <form class="flex justify-start items-center">
             <input
               type="search"
               placeholder="搜尋"
@@ -35,7 +35,7 @@
             <button class="rounded-sm p-1">
               <span class="material-icons"> search </span>
             </button>
-          </form>
+          </form> -->
         </div>
       </nav>
       <!-- login/register -->
@@ -81,7 +81,7 @@
       v-show="toggleBurger"
     >
       <div class="w-4/5 mx-auto text-center">
-        <form class="flex justify-center items-center py-4">
+        <!-- <form class="flex justify-center items-center py-4">
           <input
             type="text"
             class="
@@ -95,7 +95,7 @@
           <button class="rounded-sm p-1">
             <span class="material-icons"> search </span>
           </button>
-        </form>
+        </form> -->
         <div
           class="
             py-4

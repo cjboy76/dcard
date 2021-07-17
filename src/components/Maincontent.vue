@@ -24,7 +24,7 @@
           <button
             @click="switchHandler(false)"
             class="tab-2 px-6 leading-10 relative cursor-pointer"
-            :class="{ 'text-gray-400': tab == 'comments' }"
+            :class="{ 'text-gray-400': tab == 'likes' }"
           >
             最新
           </button>
@@ -50,9 +50,13 @@
           <p style="text-overflow: ellipsis">
             {{ item.text }}
           </p>
-          <div class="comments flex py-2">
+          <div class="flex py-2">
             <span class="material-icons"> insert_comment </span>
             <div class="span ml-1">{{ item.comments }}</div>
+            <span class="material-icons ml-1 text-gray-700 cursor-pointer">
+              favorite
+            </span>
+            <span>{{ item.likes }}</span>
           </div>
         </div>
         <div class="article-image col-span-1 grid justify-center items-center">
@@ -90,7 +94,7 @@ export default {
     const state = reactive({
       primitive: [],
     });
-    const tab = ref("comments");
+    const tab = ref("likes");
     const initial = async () => {
       const list = [];
       let snapshots = await articlesCollection
@@ -104,7 +108,7 @@ export default {
     };
     const switchHandler = (value) => {
       if (value) {
-        tab.value = "comments";
+        tab.value = "likes";
       } else {
         tab.value = "createdAt";
       }

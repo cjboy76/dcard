@@ -57,9 +57,13 @@
               <p style="text-overflow: ellipsis">
                 {{ item.text }}
               </p>
-              <div class="comments flex py-2">
+              <div class="flex py-2">
                 <span class="material-icons"> insert_comment </span>
                 <div class="span">{{ item.comments }}</div>
+                <span class="material-icons ml-1 text-gray-700 cursor-pointer">
+                  favorite
+                </span>
+                <span>{{ item.likes }}</span>
               </div>
             </div>
             <div

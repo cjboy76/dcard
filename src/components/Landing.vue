@@ -63,6 +63,7 @@
             >名稱
             <vee-field
               @focus="showAlert = true"
+              @blur="showAlert = false"
               type="text"
               name="name"
               class="
@@ -253,7 +254,7 @@ export default {
       confirmation: "password_mismatch:@password",
     };
     const schemaLogin = {
-      email: "required|email",
+      email: "required",
       password: "required|min:8",
     };
     const register = async (values) => {
