@@ -104,12 +104,14 @@ export default {
     const favoriteList = ref([]);
     const primitive = ref([]);
     const initial = async () => {
+      // 拿使用者收藏文章陣列
       const snapshots = await db
         .collection("favoriteCol")
         .doc(auth.currentUser.uid)
         .get();
-      if (snapshots.exists) defaultDisplay.value = false;
       favoriteList.value = [...snapshots.data().favoriteList];
+      if (snapshots.data().favoriteList[0]) defaultDisplay.value = false;
+      // 用陣列資料 遍歷找出文章
       await Promise.all(
         favoriteList.value.map(async (item) => {
           const target = await articlesCollection.doc(item).get();

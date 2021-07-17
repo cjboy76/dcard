@@ -156,6 +156,7 @@ export default {
       await emit("updateData", values);
       showingSpinner.value = false;
       toggleProfile.value = false;
+      window.location.reload();
     };
     return {
       setMax,

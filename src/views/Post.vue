@@ -262,6 +262,17 @@ export default {
       }`;
       return time;
     });
+    const getTime = () => {
+      let time = new Date();
+      let month = time.getMonth() + 1;
+      let date = time.getDate();
+      let hour = time.getHours();
+      let minute = time.getMinutes();
+      time = `${month}月${date}日  ${hour}:${
+        minute < 10 ? "0" + minute : minute
+      }`;
+      return time;
+    };
     // editing
     const submissionAllow = ref(false);
     const editArea = ref(null);
@@ -311,6 +322,7 @@ export default {
     const reviewArea = ref(null);
     let url = "";
     const submit = async () => {
+      let postingTime = getTime();
       NProgress.start();
       submissionAllow.value = true;
       boardNumber.value = boardNumber.value += 1;
@@ -340,11 +352,13 @@ export default {
           text: postForm.text,
           imagesURL: url,
           createdAt: timeStamp(),
-          postingTime: currentTime.value,
+          postingTime: postingTime,
           comments: 0,
           likes: 0,
           covid: "19",
-          author: state.user,
+          authorName: state.user.name,
+          authorGender: state.user.gender,
+          profileImageURL: state.user.profileImageURL,
           uID: auth.currentUser.uid,
         });
         // 資料庫加入貼文 id
@@ -353,6 +367,7 @@ export default {
         });
       } catch (error) {
         console.log(error);
+        alert("發布失敗 請稍候再嘗試");
         submissionAllow.value = false;
         NProgress.done();
         return;

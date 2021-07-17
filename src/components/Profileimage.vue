@@ -14,12 +14,12 @@
           overflow-hidden
         "
       >
+        <img :src="newURL" v-if="newURL" class="max-w-xs" />
         <img
           :src="user.profileImageURL"
-          v-if="user.profileImageURL"
+          v-else-if="user.profileImageURL"
           class="max-w-xs w-60"
         />
-        <img :src="newURL" v-else-if="newURL" class="max-w-xs" />
         <img src="@/assets/user.svg" v-else class="object-cover" />
       </div>
     </div>
@@ -63,14 +63,8 @@ export default {
       );
       const { task } = await userProfileImageRef.put(file);
       const url = await task.snapshot.ref.getDownloadURL();
-      try {
-        await emit("updateData", { profileImageURL: url, fileName: file.name });
-      } catch (error) {
-        console.log(error);
-        return;
-      }
+      await emit("updateData", { profileImageURL: url, fileName: file.name });
       newURL.value = url;
-      window.location.reload();
     };
     return {
       upload,

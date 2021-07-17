@@ -38,14 +38,14 @@
               "
             >
               <img
-                v-if="state.article?.author?.profileImageURL"
-                :src="state.article?.author?.profileImageURL"
+                v-if="state.article?.profileImageURL"
+                :src="state.article?.profileImageURL"
                 class="max-w-xs w-20"
               />
               <img v-else src="../assets/user.svg" class="object-cover" />
             </div>
             <span class="text-lg font-semibold ml-2">
-              {{ state.article?.author?.name }}
+              {{ state.article?.authorName }}
             </span>
           </div>
           <!-- article -->
@@ -140,7 +140,7 @@ export default {
     const favoriteList = ref([]);
     const likeList = ref([]);
     const likeCount = ref(0);
-    const borderColor = ref("border-gray-700");
+
     const initial = async () => {
       // 拿取本文章資料
       const articleSnapshot = await articlesCollection
@@ -166,18 +166,19 @@ export default {
       if (likeSnapshot.exists) {
         likeList.value = [...likeSnapshot.data().likeList];
       }
-      // 用文章資料計算頭照邊框男女樣式
-      if (state.article.author.gender) {
-        state.article.author.gender == "男生"
-          ? (borderColor.value = "border-blue-200")
-          : (borderColor.value = "border-red-200");
-      }
       // 用文章資料計算文章按讚數
       if (state.article.likes) {
         likeCount.value = state.article.likes;
       }
     };
     initial();
+    // 大頭貼邊框
+    const borderColor = computed(() => {
+      let value = state.article.authorGender;
+      // 用文章資料計算頭照邊框男女樣式
+      let target = value == "男生" ? "border-blue-200" : "border-red-200";
+      return target;
+    });
     // 按讚文章部分
     const likeStatus = computed(() => {
       const rule = (element) => element == auth.currentUser.uid;

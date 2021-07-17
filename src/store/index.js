@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { auth, usersCollection } from "@/includes/firebase";
+import { auth, usersCollection, articlesCollection } from "@/includes/firebase";
 
 export default createStore({
   state: {
@@ -103,6 +103,8 @@ export default createStore({
       await usersCollection.doc(userCredential.user.uid).set({
         name: payload.name,
         email: payload.email,
+        gender: "男生",
+        profileImageURL: "",
       });
       // firebase set document data's property
       await userCredential.user.updateProfile({
@@ -135,9 +137,25 @@ export default createStore({
         ...userRef.data(),
       };
     },
-    async updateData({ dispatch }, payload) {
-      await usersCollection.doc(auth.currentUser.uid).update(payload);
-      await dispatch("getData");
+    async updateData(context, payload) {
+      // 更新使用者資料
+      try {
+        await usersCollection.doc(auth.currentUser.uid).update(payload);
+      } catch (error) {
+        console.log(error);
+      }
+      // 更新使用者發表過文章大頭照
+      const snapshots = await articlesCollection
+        .where("uID", "==", auth.currentUser.uid)
+        .get();
+      await Promise.all(
+        snapshots.docs.map(async (item) => {
+          await articlesCollection.doc(item.data().docID).update({
+            profileImageURL: payload.profileImageURL,
+            fileName: payload.fileName,
+          });
+        })
+      );
     },
   },
 });
