@@ -116,6 +116,7 @@ export default {
         Math.round(scrollTop) + innerHeight === offsetHeight;
       if (bottomOfWindow) {
         getArticles();
+        console.log("reach!!");
       }
     };
     onBeforeMount(() => {
@@ -139,20 +140,22 @@ export default {
         snapshots = await articlesCollection
           .where("boardKey", "==", route.params.boardKey)
           .startAfter(lastOne)
-          .limit(30)
+          .limit(20)
           .get();
       } else {
         snapshots = await articlesCollection
           .where("boardKey", "==", route.params.boardKey)
-          .limit(30)
+          .limit(20)
           .get();
       }
       if (!snapshots.empty) defaultDisplay.value = false;
+      let list = [];
       snapshots.forEach((item) => {
-        state.articleList.push({
+        list.push({
           ...item.data(),
         });
       });
+      state.articleList = list;
     };
     getArticles();
     const routerPush = (key, id) => {
