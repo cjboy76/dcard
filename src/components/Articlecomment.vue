@@ -59,7 +59,7 @@
     <div
       v-else
       v-for="item of state.commentList"
-      :key="item.createdAt.seconds"
+      :key="item.docID"
       class="w-10/12 mx-auto py-4 border-b-2 border-gray-400 text-gray-400"
     >
       <div class="flex justify-start items-center">

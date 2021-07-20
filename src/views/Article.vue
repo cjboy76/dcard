@@ -122,7 +122,6 @@ import AppArticlecomment from "@/components/Articlecomment.vue";
 import { auth, timeStamp, db, articlesCollection } from "@/includes/firebase";
 import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { reactive, ref, computed } from "@vue/reactivity";
-import { onBeforeUnmount, onBeforeMount } from "@vue/runtime-core";
 
 export default {
   components: {
@@ -240,22 +239,6 @@ export default {
       .doc(route.params.aID)
       .collection("commentList");
     const submission = ref(false);
-    // 計算捲軸觸底觸發 getComment()
-    const scrollHandler = () => {
-      const { scrollTop, offsetHeight } = document.documentElement;
-      const { innerHeight } = window;
-      const bottomOfWindow =
-        Math.round(scrollTop) + innerHeight === offsetHeight;
-      if (bottomOfWindow) {
-        getComment();
-      }
-    };
-    onBeforeMount(() => {
-      window.addEventListener("scroll", scrollHandler);
-    });
-    onBeforeUnmount(() => {
-      window.removeEventListener("scroll", scrollHandler);
-    });
     // 避免重複 request
     const pendingRequest = ref(false);
     const getComment = async () => {
@@ -264,27 +247,15 @@ export default {
       }
       pendingRequest.value = true;
       let snapshots;
-      if (state.commentList.length) {
-        const lastOne = await commentRef
-          .doc(state.commentList[state.commentList.length - 1].docID)
-          .get();
-        snapshots = await commentRef
-          .orderBy("createdAt", "desc")
-          .startAfter(lastOne)
-          .limit(10)
-          .get();
-      } else {
-        snapshots = await commentRef
-          .orderBy("createdAt", "desc")
-          .limit(10)
-          .get();
-      }
+      snapshots = await commentRef.orderBy("createdAt", "desc").get();
+      let list = [];
       snapshots.forEach((doc) => {
-        state.commentList.push({
+        list.push({
           ...doc.data(),
           docID: doc.id,
         });
       });
+      state.commentList = list;
       pendingRequest.value = false;
     };
     getComment();
@@ -294,7 +265,7 @@ export default {
       let date = time.getDate();
       let hour = time.getHours();
       let minute = time.getMinutes();
-      time = `${month}月${date}日  ${hour}:${
+      time = `${month}月${date}日  ${hour < 10 ? "0" + hour : hour}:${
         minute < 10 ? "0" + minute : minute
       }`;
       return time;
@@ -317,8 +288,8 @@ export default {
         alert("留言失敗，請稍後再嘗試");
         return;
       }
+      await getComment();
       submission.value = false;
-      getComment();
     };
     // before leaving && upload data
     onBeforeRouteLeave(async (to, from, next) => {

@@ -268,7 +268,7 @@ export default {
       let date = time.getDate();
       let hour = time.getHours();
       let minute = time.getMinutes();
-      time = `${month}月${date}日  ${hour}:${
+      time = `${month}月${date}日  ${hour < 10 ? "0" + hour : hour}:${
         minute < 10 ? "0" + minute : minute
       }`;
       return time;
