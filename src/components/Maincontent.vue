@@ -33,74 +33,45 @@
     </div>
     <!-- articles -->
     <div class="container pb-8">
-      <router-link
-        :to="{
-          name: 'Article',
-          params: { boardKey: item.boardKey, aID: item.docID },
-        }"
+      <!-- default with no data -->
+      <article-default v-if="defaultDisplay" />
+      <!-- if data exists -->
+      <article-component
+        v-else
         v-for="item of state.primitive"
         :key="item.docID"
-        class="w-10/12 mx-auto grid grid-cols-3 py-2 border-b-2"
-      >
-        <div class="article-text col-span-2 w-11/12 mx-auto">
-          <div class="boardtype text-gray-400 py-1">
-            <span>{{ item.boardName }}</span>
-          </div>
-          <h2 class="font-bold text-lg">{{ item.title }}</h2>
-          <p style="text-overflow: ellipsis">
-            {{ item.text }}
-          </p>
-          <div class="flex py-2">
-            <span class="material-icons"> insert_comment </span>
-            <div class="span ml-1">{{ item.comments }}</div>
-            <span class="material-icons ml-1 text-gray-700 cursor-pointer">
-              favorite
-            </span>
-            <span>{{ item.likes }}</span>
-          </div>
-        </div>
-        <div class="article-image col-span-1 grid justify-center items-center">
-          <div
-            class="
-              h-24
-              w-24
-              rounded-xl
-              overflow-hidden
-              flex
-              justify-center
-              items-center
-            "
-          >
-            <img
-              :src="item.imagesURL"
-              :alt="item.imageURL"
-              class="max-w-sm w-36"
-            />
-          </div>
-        </div>
-      </router-link>
+        :article="item"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import ArticleDefault from "@/components/Articledefault.vue";
+import ArticleComponent from "@/components/Articlecomponent.vue";
 import { articlesCollection } from "@/includes/firebase";
 import { reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 
 export default {
   name: "AppMaincontent",
+  components: {
+    ArticleDefault,
+    ArticleComponent,
+  },
   setup() {
     const state = reactive({
       primitive: [],
     });
     const tab = ref("likes");
+    const defaultDisplay = ref(true);
     const initial = async () => {
       const list = [];
       let snapshots = await articlesCollection
         .orderBy(tab.value, "desc")
         .limit(30)
         .get();
+      if (!snapshots.empty) defaultDisplay.value = false;
       await snapshots.forEach((document) => {
         list.push(document.data());
       });
@@ -121,6 +92,7 @@ export default {
       state,
       switchHandler,
       tab,
+      defaultDisplay,
     };
   },
 };

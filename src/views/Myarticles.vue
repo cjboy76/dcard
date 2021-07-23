@@ -23,67 +23,15 @@
       <!-- article -->
       <div class="container pb-8">
         <div class="bg-gray-100">
-          <!-- default with no articles-->
-          <article
-            class="w-10/12 mx-auto py-2 border-b-2"
-            v-if="defaultDisplay"
-          >
-            <div class="article-text w-11/12 mx-auto text-center text-2xl py-8">
-              還沒建立過文章噢 ～
-            </div>
-          </article>
-          <!-- if articles exits -->
-          <article
-            @click="routerPush(item.boardKey, item.docID)"
+          <!-- default with no data -->
+          <article-default v-if="defaultDisplay" />
+          <!-- if data exists -->
+          <article-component
             v-else
-            v-for="item in state.artList"
+            v-for="item of state.articleList"
             :key="item.docID"
-            class="
-              w-10/12
-              mx-auto
-              grid grid-cols-3
-              py-2
-              border-b-2
-              cursor-pointer
-            "
-          >
-            <div class="article-text col-span-2 w-11/12 mx-auto">
-              <div class="boardtype text-gray-400 py-1">
-                <span>{{ item.boardName }}</span>
-              </div>
-              <h2 class="font-bold text-lg" style="text-overflow: ellipsis">
-                {{ item.title }}
-              </h2>
-              <p style="text-overflow: ellipsis">
-                {{ item.text }}
-              </p>
-              <div class="flex py-2">
-                <span class="material-icons"> insert_comment </span>
-                <div class="span">{{ item.comments }}</div>
-                <span class="material-icons ml-1 text-gray-700 cursor-pointer">
-                  favorite
-                </span>
-                <span>{{ item.likes }}</span>
-              </div>
-            </div>
-            <div
-              class="article-image col-span-1 grid justify-center items-center"
-            >
-              <div
-                class="
-                  w-24
-                  h-24
-                  rounded-lg
-                  overflow-hidden
-                  flex
-                  justify-center
-                  items-center
-                "
-              >
-                <img :src="item.imagesURL" class="max-w-xs" />
-              </div>
-            </div>
-          </article>
+            :article="item"
+          />
         </div>
       </div>
     </div>
@@ -92,21 +40,23 @@
 </template>
 
 <script>
-import { articlesCollection, auth } from "../includes/firebase";
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
+import ArticleDefault from "@/components/Articledefault.vue";
+import ArticleComponent from "@/components/Articlecomponent.vue";
+import { articlesCollection, auth } from "../includes/firebase";
 import { reactive, ref } from "@vue/reactivity";
-import { useRouter } from "vue-router";
 
 export default {
   name: "Myarticles",
   components: {
     AppMainsidebar,
     AppMainprofile,
+    ArticleDefault,
+    ArticleComponent,
   },
   setup() {
-    const router = useRouter();
-    const state = reactive({ artList: [] });
+    const state = reactive({ articleList: [] });
     const defaultDisplay = ref(true);
     const getOwnArticles = async () => {
       const snapshot = await articlesCollection
@@ -120,16 +70,12 @@ export default {
           docID: doc.id,
         })
       );
-      state.artList = targetList;
+      state.articleList = targetList;
     };
     getOwnArticles();
-    const routerPush = (key, id) => {
-      router.push({ name: "Article", params: { boardKey: key, aID: id } });
-    };
     return {
       state,
       defaultDisplay,
-      routerPush,
     };
   },
 };

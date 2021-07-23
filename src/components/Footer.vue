@@ -11,7 +11,7 @@
       py-1
     "
   >
-    Copyright © Luvboy.76 2021
+    Copyright © Luvboy.76 {{ new Date().getFullYear() }}
   </div>
 </template>
 

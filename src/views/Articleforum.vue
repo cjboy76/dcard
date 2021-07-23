@@ -6,69 +6,22 @@
     <div
       class="col-span-3 bg-gray-100 mt-10 lg:mt-0 sm:rounded-t lg:rounded-xl"
     >
+      <!-- board title -->
       <div class="w-10/12 mx-auto mt-5 pt-5 lg:pt-0 border-b-2 border-gray-400">
         <div class="font-bold text-3xl my-2">
           {{ title.name }}
         </div>
       </div>
-      <!-- default with no articles -->
-      <div class="sticky top-16 bg-gray-100" v-if="defaultDisplay">
-        <div class="container">
-          <div class="flex justify-center items-center py-10">
-            <span class="text-2xl"> 目前看板還沒有貼文哦~ </span>
-          </div>
-        </div>
-      </div>
-      <!-- if articles exits -->
-      <div class="container">
-        <article
-          @click="routerPush(item.boardKey, item.docID)"
+      <div class="container pb-8">
+        <!-- default with no data -->
+        <article-default v-if="defaultDisplay" />
+        <!-- if data exists -->
+        <article-component
+          v-else
           v-for="item of state.articleList"
           :key="item.docID"
-          class="
-            w-10/12
-            mx-auto
-            grid grid-cols-3
-            justify-center
-            items-center
-            py-2
-            border-b-2
-            cursor-pointer
-          "
-        >
-          <div class="article-text col-span-2 w-11/12 mx-auto">
-            <div class="boardtype text-gray-400 py-1">
-              <span>{{ item.boardName }}</span>
-            </div>
-            <h2 class="font-bold text-lg">{{ item.title }}</h2>
-            <p>
-              {{ item.text }}
-            </p>
-            <div class="flex py-2">
-              <span class="material-icons"> insert_comment </span>
-              <div class="span ml-1">{{ item.comments }}</div>
-              <span class="material-icons ml-1 text-gray-700 cursor-pointer">
-                favorite
-              </span>
-              <span>{{ item.likes }}</span>
-            </div>
-          </div>
-          <div
-            class="
-              h-24
-              w-24
-              rounded-xl
-              overflow-hidden
-              col-span-1
-              flex
-              justify-center
-              items-center
-              mx-auto
-            "
-          >
-            <img :src="item.imagesURL" class="max-w-sm w-40" />
-          </div>
-        </article>
+          :article="item"
+        />
       </div>
     </div>
     <app-mainprofile />
@@ -78,6 +31,8 @@
 <script>
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
+import ArticleDefault from "@/components/Articledefault.vue";
+import ArticleComponent from "@/components/Articlecomponent.vue";
 import {
   computed,
   reactive,
@@ -86,18 +41,19 @@ import {
   onBeforeUnmount,
 } from "@vue/runtime-core";
 import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { articlesCollection } from "@/includes/firebase";
 
 export default {
   components: {
     AppMainsidebar,
     AppMainprofile,
+    ArticleDefault,
+    ArticleComponent,
   },
   setup() {
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
     const state = reactive({
       boardList: computed(() => store.state.boardList),
       articleList: [],
@@ -158,14 +114,10 @@ export default {
       state.articleList = list;
     };
     getArticles();
-    const routerPush = (key, id) => {
-      router.push({ name: "Article", params: { boardKey: key, aID: id } });
-    };
     return {
       title,
       state,
       defaultDisplay,
-      routerPush,
     };
   },
 };
