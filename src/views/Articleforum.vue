@@ -107,8 +107,14 @@ export default {
       if (!snapshots.empty) defaultDisplay.value = false;
       let list = [];
       snapshots.forEach((item) => {
+        console.log(item.data());
+        let snippet =
+          item.data().text.length > 30
+            ? item.data().text.substring(0, 30) + "..."
+            : item.data().text;
         list.push({
           ...item.data(),
+          snippet,
         });
       });
       state.articleList = list;

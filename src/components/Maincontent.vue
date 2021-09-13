@@ -73,7 +73,11 @@ export default {
         .get();
       if (!snapshots.empty) defaultDisplay.value = false;
       await snapshots.forEach((document) => {
-        list.push(document.data());
+        let snippet =
+          document.data().text.length > 30
+            ? document.data().text.substring(0, 30) + "..."
+            : document.data().text;
+        list.push({ ...document.data(), snippet });
       });
       state.primitive = list;
     };

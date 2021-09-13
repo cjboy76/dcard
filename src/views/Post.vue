@@ -343,6 +343,11 @@ export default {
           .update({ count: boardNumber.value });
         // 取使用者資料
         state.user = await store.dispatch("getData");
+        // text預覽處理
+        // postForm.text =
+        //   postForm.text > 30
+        //     ? postForm.text.substring(0, 30) + "..."
+        //     : postForm.text;
         // 上傳貼文
         const task = await articlesCollection.add({
           boardName: postForm.board.name,

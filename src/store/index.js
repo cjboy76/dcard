@@ -131,11 +131,13 @@ export default createStore({
       }
     },
     async getData({ commit }) {
-      const userRef = await usersCollection.doc(auth.currentUser.uid).get();
-      commit("setPhoto", userRef.data().profileImageURL);
-      return {
-        ...userRef.data(),
-      };
+      if (auth.currentUser.uid) {
+        const userRef = await usersCollection.doc(auth.currentUser.uid).get();
+        commit("setPhoto", userRef.data().profileImageURL);
+        return {
+          ...userRef.data(),
+        };
+      }
     },
     async updateData(context, payload) {
       // 更新使用者資料

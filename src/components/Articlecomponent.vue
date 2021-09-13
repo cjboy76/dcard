@@ -13,8 +13,8 @@
         <span>{{ article.boardName }}</span>
       </div>
       <h2 class="font-bold text-lg">{{ article.title }}</h2>
-      <p style="text-overflow: ellipsis">
-        {{ article.text }}
+      <p>
+        {{ article.snippet }}
       </p>
       <div class="flex py-2">
         <span class="material-icons"> insert_comment </span>

@@ -27,7 +27,7 @@
         <!-- if data exists -->
         <article-component
           v-else
-          v-for="item of state.primitive"
+          v-for="item of primitive"
           :key="item.docID"
           :article="item"
         />
@@ -69,7 +69,11 @@ export default {
       await Promise.all(
         favoriteList.value.map(async (item) => {
           const target = await articlesCollection.doc(item).get();
-          primitive.value.push(target.data());
+          let snippet =
+            target.data().text.length > 30
+              ? target.data().text.substring(0, 30) + "..."
+              : target.data().text;
+          primitive.value.push({ ...target.data(), snippet });
         })
       );
     };

@@ -1,15 +1,6 @@
 <template>
   <div
-    class="
-      absolute
-      left-0
-      bottom-0
-      text-center
-      w-full
-      bg-green-900
-      text-gray-100
-      py-1
-    "
+    class="fixed bottom-0 left-0 text-center w-full bg-green-900 text-gray-100"
   >
     Copyright © Luvboy.76 {{ new Date().getFullYear() }}
   </div>

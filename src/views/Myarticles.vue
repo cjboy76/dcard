@@ -64,12 +64,17 @@ export default {
         .get();
       if (!snapshot.empty) defaultDisplay.value = false;
       let targetList = [];
-      await snapshot.docs.map((doc) =>
+      await snapshot.docs.map((doc) => {
+        let snippet =
+          doc.data().text.length > 30
+            ? doc.data().text.substring(0, 30) + "..."
+            : doc.data().text;
         targetList.push({
           ...doc.data(),
           docID: doc.id,
-        })
-      );
+          snippet,
+        });
+      });
       state.articleList = targetList;
     };
     getOwnArticles();

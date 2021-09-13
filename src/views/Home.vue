@@ -4,7 +4,6 @@
     <app-mainsidebar />
     <app-maincontent />
     <app-mainprofile />
-    <app-footer />
   </div>
 </template>
 
@@ -12,7 +11,6 @@
 import AppMainsidebar from "@/components/Mainsidebar.vue";
 import AppMaincontent from "@/components/Maincontent.vue";
 import AppMainprofile from "@/components/Mainprofile.vue";
-import AppFooter from "@/components/Footer.vue";
 
 export default {
   name: "Home",
@@ -20,7 +18,6 @@ export default {
     AppMainsidebar,
     AppMaincontent,
     AppMainprofile,
-    AppFooter,
   },
 };
 </script>

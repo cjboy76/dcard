@@ -1,17 +1,22 @@
 <template>
-  <app-header />
-  <Landing />
-  <router-view />
+  <div class="relative">
+    <app-header />
+    <Landing />
+    <router-view />
+    <app-footer />
+  </div>
 </template>
 
 <script>
 import AppHeader from "@/components/Header.vue";
 import Landing from "@/components/Landing.vue";
+import AppFooter from "@/components/Footer.vue";
 
 export default {
   components: {
     AppHeader,
     Landing,
+    AppFooter,
   },
   created() {
     this.$store.dispatch("init_login");
