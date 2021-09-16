@@ -10,8 +10,11 @@ import "nprogress/nprogress.css";
 
 ProgressBar(router);
 let app;
-// initial firebase before initialize the Vue app
-// 如果 app 不存在的話再建立一個 vue instance
+// initial firebase after initializing Vue app and check the user state
+
+// reload browser => Vue instance destroyed => so build a new Vue app => App.vue dispatch init_login
+// => toggle user state
+
 auth.onAuthStateChanged(() => {
   if (!app) {
     app = createApp(App);
